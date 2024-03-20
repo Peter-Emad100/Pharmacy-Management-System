@@ -1,6 +1,12 @@
-﻿#include <iostream>
+﻿//**********Libraries***********//
+
+#include <iostream>
 using namespace std;
+
+//**********Declarations***********//
+
 const int Size=100;
+
 struct medicine {
 	int ID;
 	string name;
@@ -21,7 +27,6 @@ struct medicine {
 };
 medicine medicines[Size];
 
-	;
 struct user {
 	int ID;
 	string username;
@@ -32,6 +37,7 @@ struct user {
 	enum role{ User, Admin };
 };
 user users[Size];
+
 struct order {
 	int userID;
 	string orderDate;
@@ -40,6 +46,9 @@ struct order {
 	string shipDate;
 };
 order orders[Size];
+
+//**********Functions***********//
+
 void searchForMedicineByCategory() {
 	string category;
 	cin >> category;
@@ -54,6 +63,7 @@ void searchForMedicineByCategory() {
 		cout << "there is no medicine meet this category" << endl;
 	}
 }
+
 int main()
 {
 	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic",5.99, 100);
