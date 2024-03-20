@@ -1,11 +1,15 @@
 ﻿//**********Libraries***********//
 
 #include <iostream>
+#include <fstream>
+#include <algorithm>
+#include <string>
 using namespace std;
 
 //**********Declarations***********//
 
-const int Size=100;
+const int Size = 100;
+const int medicine_data = 7;
 
 struct medicine {
 	int ID;
@@ -34,7 +38,7 @@ struct user {
 	string email;
 	string address;
 	string phone;
-	enum role{ User, Admin };
+	enum role { User, Admin };
 };
 user users[Size];
 
@@ -48,6 +52,61 @@ struct order {
 order orders[Size];
 
 //**********Functions***********//
+
+void saveMedicineDataLocally() {
+	fstream data;
+	data.open("MedicineData.txt", ios::out);
+	if (data.is_open())
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			data << "Medicine: " << i + 1 << endl;
+			data << medicines[i].name << endl;
+			data << medicines[i].category << endl;
+			data << medicines[i].description << endl;
+			data << medicines[i].ID << endl;
+			data << medicines[i].quantity_in_stock << endl;
+			data << medicines[i].availability << endl;
+			data << medicines[i].price << endl;
+			data << "------------------------------------------------------------------------" << endl;
+		}
+		data.close();
+	}
+}
+
+void saveMedicineDataToArr() {
+	fstream data;
+	data.open("MedicineData.txt", ios::in);
+	if (data.is_open())
+	{
+		string line;
+		getline(data, line);                  //Skips a line
+		for (int i = 0; i < 10; i++)
+		{
+			getline(data, line);
+			medicines[i].name = line;
+			cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line);
+			medicines[i].category = line;
+			cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line);
+			medicines[i].description = line;
+			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			data >> medicines[i].ID;
+			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			data >> medicines[i].quantity_in_stock;
+			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			data >> medicines[i].availability;
+			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			data >> medicines[i].price;
+			cout << medicines[i].price << endl<<endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line);                //skips a line//
+			getline(data, line);                //skips a line//
+			getline(data, line);                //skips a line//
+		}
+		data.close();
+	}
+}
 
 void searchForMedicineByCategory() {
 	string category;
@@ -66,7 +125,8 @@ void searchForMedicineByCategory() {
 
 int main()
 {
-	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic",5.99, 100);
+
+	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
 	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure", true, "Antihypertensive", 10.49, 50);
 	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", true, "Gastrointestinal", 7.25, 80);
 	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides", true, "Lipid-lowering agent", 15.75, 30);
@@ -76,4 +136,6 @@ int main()
 	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", true, "Analgesic", 4.75, 200);
 	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 70);
 	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", true, "Gastrointestinal", 6.99, 90);
+	saveMedicineDataLocally();
+	saveMedicineDataToArr();
 }
