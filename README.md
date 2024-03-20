@@ -9,20 +9,20 @@
 - Order: user ID, OrderDate, List_of_medicine_IDs, Total Price, Ship Date
 
 ### Customer Functions :
-- [] Log in
-- [] Log out
-- [] Sign up (full name , mobile, delivery location ,role)
-- [] Search for medicine/ by name/ by category
-- [] Make order
-- [] Choose payment method (add visa , choose cash , pick at
+- [ ] Log in
+- [ ] Log out
+- [ ] Sign up (full name , mobile, delivery location ,role)
+- [ ] Search for medicine/ by name/ by category
+- [ ] Make order
+- [ ] Choose payment method (add visa , choose cash , pick at
 pharmacy)
-- [] Track order / view
-- [] Request drug
-- [] View all previous orders
+- [ ] Track order / view
+- [ ] Request drug
+- [ ] View all previous orders
 
 ### Admin Functions ( all customers functions plus ):
 
-- [] Manage users.
-- [] Manage medicines
-- [] Manage orders
-- [] Manage payment
+- [ ] Manage users.
+- [ ] Manage medicines
+- [ ] Manage orders
+- [ ] Manage payment
