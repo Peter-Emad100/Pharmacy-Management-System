@@ -1,80 +1,90 @@
-1
+Medicine: 1
 Paracetamol
+Analgesic
+Pain reliever and fever reducer
+1
 100
 1
-Analgesic
 5.99
-Pain reliever and fever reducer
-
-2
+------------------------------------------------------------------------
+Medicine: 2
 Lisinopril
+Antihypertensive
+Used to treat high blood pressure
+2
 50
 1
-Antihypertensive
 10.49
-Used to treat high blood pressure
-
-3
+------------------------------------------------------------------------
+Medicine: 3
 Omeprazole
+Gastrointestinal
+Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)
+3
 80
 1
-Gastrointestinal
 7.25
-Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)
-
-4
+------------------------------------------------------------------------
+Medicine: 4
 Atorvastatin
+Lipid-lowering agent
+Lowers high cholesterol and triglycerides
+4
 30
 1
-Lipid-lowering agent
 15.75
-Lowers high cholesterol and triglycerides
-
-5
+------------------------------------------------------------------------
+Medicine: 5
 Metformin
+Antidiabetic
+Treats type 2 diabetes
+5
 60
 1
-Antidiabetic
 8.99
-Treats type 2 diabetes
-
-6
+------------------------------------------------------------------------
+Medicine: 6
 Amoxicillin
+Antibiotic
+Antibiotic used to treat bacterial infections
+6
 120
 1
-Antibiotic
 6.5
-Antibiotic used to treat bacterial infections
-
-7
+------------------------------------------------------------------------
+Medicine: 7
 Alprazolam
+Anxiolytic
+Treats anxiety and panic disorders
+7
 40
 1
-Anxiolytic
 12.99
-Treats anxiety and panic disorders
-
-8
+------------------------------------------------------------------------
+Medicine: 8
 Ibuprofen
+Analgesic
+Nonsteroidal anti-inflammatory drug (NSAID)
+8
 200
 1
-Analgesic
 4.75
-Nonsteroidal anti-inflammatory drug (NSAID)
-
-9
+------------------------------------------------------------------------
+Medicine: 9
 Cetirizine
+Antihistamine
+Antihistamine used for allergy relief
+9
 70
 1
-Antihistamine
 9.25
-Antihistamine used for allergy relief
-
-10
+------------------------------------------------------------------------
+Medicine: 10
 Ranitidine
+Gastrointestinal
+Reduces stomach acid production to treat heartburn and ulcers
+10
 90
 1
-Gastrointestinal
 6.99
-Reduces stomach acid production to treat heartburn and ulcers
-
+------------------------------------------------------------------------
