@@ -1,0 +1,80 @@
+1
+Paracetamol
+100
+1
+Analgesic
+5.99
+Pain reliever and fever reducer
+
+2
+Lisinopril
+50
+1
+Antihypertensive
+10.49
+Used to treat high blood pressure
+
+3
+Omeprazole
+80
+1
+Gastrointestinal
+7.25
+Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)
+
+4
+Atorvastatin
+30
+1
+Lipid-lowering agent
+15.75
+Lowers high cholesterol and triglycerides
+
+5
+Metformin
+60
+1
+Antidiabetic
+8.99
+Treats type 2 diabetes
+
+6
+Amoxicillin
+120
+1
+Antibiotic
+6.5
+Antibiotic used to treat bacterial infections
+
+7
+Alprazolam
+40
+1
+Anxiolytic
+12.99
+Treats anxiety and panic disorders
+
+8
+Ibuprofen
+200
+1
+Analgesic
+4.75
+Nonsteroidal anti-inflammatory drug (NSAID)
+
+9
+Cetirizine
+70
+1
+Antihistamine
+9.25
+Antihistamine used for allergy relief
+
+10
+Ranitidine
+90
+1
+Gastrointestinal
+6.99
+Reduces stomach acid production to treat heartburn and ulcers
+
