@@ -85,21 +85,21 @@ void saveMedicineDataToArr() {
 		{
 			getline(data, line);
 			medicines[i].name = line;
-			cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line);
 			medicines[i].category = line;
-			cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line);
 			medicines[i].description = line;
-			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			data >> medicines[i].ID;
-			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			data >> medicines[i].quantity_in_stock;
-			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			data >> medicines[i].availability;
-			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			data >> medicines[i].price;
-			cout << medicines[i].price << endl<<endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].price << endl<<endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line);                //skips a line//
 			getline(data, line);                //skips a line//
 			getline(data, line);                //skips a line//
