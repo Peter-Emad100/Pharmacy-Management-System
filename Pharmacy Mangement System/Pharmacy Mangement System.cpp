@@ -62,7 +62,7 @@ struct order {
 		userID = _id;
 		orderDate = _orderDate;
 		totalPrice = _Price;
-		shipDate=_shipDate;
+		shipDate = _shipDate;
 		int i = 0;
 		while (_medicine_ID[i] != 0) {
 			medicine_ID[i] = _medicine_ID[i];
@@ -78,20 +78,21 @@ order orders[Size] = {};
 
 void saveMedicineDataLocally() {
 	fstream data;
-	data.open("MedicineData.txt", ios::out);
+	data.open("MedicineData.csv", ios::out);
 	if (data.is_open())
 	{
+		data << "sep=|" << endl;
+		data << "Name" << "|" << "Category" << "|" << "Description" << "|" << "ID" << "|" << "Quantity in stock" << "|" << "Availabilty" << "|" << "Price" << endl;
 		for (int i = 0; i < 10; i++)
 		{
-			data << "Medicine: " << i + 1 << endl;
-			data << medicines[i].name << endl;
-			data << medicines[i].category << endl;
-			data << medicines[i].description << endl;
-			data << medicines[i].ID << endl;
-			data << medicines[i].quantity_in_stock << endl;
-			data << medicines[i].availability << endl;
-			data << medicines[i].price << endl;
-			data << "------------------------------------------------------------------------" << endl;
+			data << medicines[i].name << "|";
+			data << medicines[i].category << "|";
+			data << medicines[i].description << "|";
+			data << medicines[i].ID << "|";
+			data << medicines[i].quantity_in_stock << "|";
+			data << medicines[i].availability << "|";
+			data << medicines[i].price;
+			data << endl;
 		}
 		data.close();
 	}
@@ -99,33 +100,35 @@ void saveMedicineDataLocally() {
 
 void saveMedicineDataToArr() {
 	fstream data;
-	data.open("MedicineData.txt", ios::in);
+	data.open("MedicineData.csv", ios::in);
 	if (data.is_open())
 	{
 		string line;
 		getline(data, line);                  //Skips a line
+		getline(data, line);                  //Skips a line
 		for (int i = 0; i < 10; i++)
 		{
-			getline(data, line);
+			getline(data, line, '|');
 			medicines[i].name = line;
-			//cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line);
+			cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line, '|');
 			medicines[i].category = line;
-			//cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line);
+			cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line, '|');
 			medicines[i].description = line;
-			//cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			data >> medicines[i].ID;
-			//cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			data >> medicines[i].quantity_in_stock;
-			//cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			data >> medicines[i].availability;
-			//cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			data >> medicines[i].price;
-			//cout << medicines[i].price << endl<<endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line);                //skips a line//
-			getline(data, line);                //skips a line//
-			getline(data, line);                //skips a line//
+			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line, '|');
+			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line, '|');
+			/*if (medicines[i].quantity_in_stock <= 1)
+			{
+				warningOfShortage();
+			}*/
+			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line, '|');
+			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(data, line);
+			cout << medicines[i].price << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 		}
 		data.close();
 	}
@@ -147,17 +150,20 @@ void searchForMedicineByCategory() {
 }
 
 void ShowOrderReciept(order lastOrder) {
-	cout <<"order date : " << lastOrder.orderDate << endl;
+	cout << "order date : " << lastOrder.orderDate << endl;
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
-		cout <<"medicine id : " << lastOrder.medicine_ID[i] << endl;
+		cout << "medicine id : " << lastOrder.medicine_ID[i] << endl;
 		i++;
 	}
 	cout << "user id : " << lastOrder.userID << endl;
-	cout <<"total price : " << lastOrder.totalPrice << endl;
+	cout << "total price : " << lastOrder.totalPrice << endl;
 	cout << "ship date : " << lastOrder.shipDate << endl;
 }
+
 void DataForTestPurposes() {
+
+	//*******************Medicine data****************************
 	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
 	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure", true, "Antihypertensive", 10.49, 50);
 	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", true, "Gastrointestinal", 7.25, 80);
@@ -168,7 +174,10 @@ void DataForTestPurposes() {
 	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", true, "Analgesic", 4.75, 200);
 	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 70);
 	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", true, "Gastrointestinal", 6.99, 90);
+
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	//*******************User data****************************
 	users[0].initialize(1, "Naruto", "NotNaruto", "narutouzumaki@example.com", "123 Main St, Cityville", "+1234567890", user::User);
 	users[1].initialize(2, "Madara", "password2", "nadarauchiha@example.com", "456 Elm St, Townsville", "+1987654321", user::User);
 	users[2].initialize(3, "Cillian", "Cillianpass", "callianmurphy@example.com", "789 Oak St, Villageton", "+1122334455", user::Admin);
@@ -176,6 +185,7 @@ void DataForTestPurposes() {
 	users[4].initialize(5, "Sung", "jinwoo", "sungjinwoo@example.com", "654 Birch St, Countryside", "+1122334455", user::User);
 	users[5].initialize(6, "Iman", "imangadzhi", "imangadzhi@example.com", "321 Maple St, Suburbia", "+9988776655", user::User);
 	users[6].initialize(7, "Ali", "AliAli", "alimuhammadali.smith@example.com", "111 Cedar St, Ruralville", "+1122334455", user::Admin);
+
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	int medicine1[] = { 1, 2, 3, 0 };
 	orders[0].initialize(1, "2024-03-27", medicine1, 500.0, "2024-03-27");
