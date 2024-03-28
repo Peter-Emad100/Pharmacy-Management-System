@@ -91,6 +91,7 @@ void saveMedicineDataLocally() {
 			file << medicines[i].description << "|";
 			file << medicines[i].ID << "|";
 			file << medicines[i].quantity_in_stock << "|";
+
 			file << medicines[i].availability << "|";
 			file << medicines[i].price;
 			file << endl;
@@ -151,7 +152,7 @@ void saveMedicineDataToArr() {
 			getline(file, data, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
-				warningOfShortage();
+				warningOfShortage();                                       //A funtion to make later. For admins, in order to get an alert when they are low in sth >:3    
 			}*/
 			medicines[i].quantity_in_stock = stoi(data);
 			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
