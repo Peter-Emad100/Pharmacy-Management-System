@@ -118,16 +118,20 @@ void saveMedicineDataToArr() {
 			medicines[i].description = line;
 			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
+			medicines[i].ID = stoi(line);
 			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
 				warningOfShortage();
 			}*/
+			medicines[i].quantity_in_stock = stoi(line);
 			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
+			medicines[i].availability = stoi(line);
 			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line);
+			medicines[i].price = stof(line);
 			cout << medicines[i].price << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 		}
 		data.close();
