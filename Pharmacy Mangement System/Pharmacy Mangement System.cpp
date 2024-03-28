@@ -256,7 +256,7 @@ void searchForMedicineByCategory() {
 	}
 }
 
-void ShowOrderReciept(order lastOrder) {
+void showOrderReciept(order lastOrder) {
 	cout << "order date : " << lastOrder.orderDate << endl;
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
@@ -268,7 +268,7 @@ void ShowOrderReciept(order lastOrder) {
 	cout << "ship date : " << lastOrder.shipDate << endl;
 }
 
-void DataForTestPurposes() {
+void dataForTestPurposes() {
 
 	//*******************Medicine data****************************
 	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
@@ -304,7 +304,7 @@ void DataForTestPurposes() {
 
 int main()
 {
-	DataForTestPurposes();
+	dataForTestPurposes();
 	saveAllDataLocally();
 	saveAllDataToArr();
 }
