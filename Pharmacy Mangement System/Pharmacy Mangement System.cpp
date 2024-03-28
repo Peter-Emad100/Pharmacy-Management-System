@@ -29,7 +29,7 @@ struct medicine {
 		quantity_in_stock = _quantity;
 	}
 };
-medicine medicines[Size];
+medicine medicines[Size] = {};
 
 struct user {
 	enum role { User, Admin };
@@ -50,7 +50,7 @@ struct user {
 		his_role = _rol;
 	}
 };
-user users[Size];
+user users[Size] = {};
 
 struct order {
 	int userID;
@@ -110,29 +110,29 @@ void saveMedicineDataToArr() {
 		{
 			getline(data, line, '|');
 			medicines[i].name = line;
-			cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			medicines[i].category = line;
-			cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			medicines[i].description = line;
-			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			medicines[i].ID = stoi(line);
-			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
 				warningOfShortage();
 			}*/
 			medicines[i].quantity_in_stock = stoi(line);
-			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line, '|');
 			medicines[i].availability = stoi(line);
-			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(data, line);
 			medicines[i].price = stof(line);
-			cout << medicines[i].price << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].price << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 		}
 		data.close();
 	}
@@ -153,7 +153,7 @@ void searchForMedicineByCategory() {
 	}
 }
 
-void ShowOrderReciept(order lastOrder) {
+void showOrderReciept(order lastOrder) {
 	cout << "order date : " << lastOrder.orderDate << endl;
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
@@ -165,7 +165,7 @@ void ShowOrderReciept(order lastOrder) {
 	cout << "ship date : " << lastOrder.shipDate << endl;
 }
 
-void DataForTestPurposes() {
+void dataForTestPurposes() {
 
 	//*******************Medicine data****************************
 	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
@@ -173,10 +173,10 @@ void DataForTestPurposes() {
 	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", true, "Gastrointestinal", 7.25, 80);
 	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides", true, "Lipid-lowering agent", 15.75, 30);
 	medicines[4].initialize(5, "Metformin", "Treats type 2 diabetes", true, "Antidiabetic", 8.99, 60);
-	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections", true, "Antibiotic", 6.50, 120);
+	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections", true, "Antibiotic", 6.50, 0);
 	medicines[6].initialize(7, "Alprazolam", "Treats anxiety and panic disorders", true, "Anxiolytic", 12.99, 40);
 	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", true, "Analgesic", 4.75, 200);
-	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 70);
+	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 0);
 	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", true, "Gastrointestinal", 6.99, 90);
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -198,10 +198,40 @@ void DataForTestPurposes() {
 	int medicine3[] = { 9, 4,5,7 ,0 };
 	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29");
 }
+bool searchForMedicineByName() {
+	string name;
+	cout << "Enter the medicine name" << endl;
+	cin >> name;
+	int x = name.size();
+	if (name[0] >= 'a' && name[0] <= 'z') {
+		name[0] -= 32;
+	}
+	int i = 0;
+	bool found = 0;
+	bool instock = 1;
+	while (medicines[i].ID != 0) 
+	{
+		string_view sv(medicines[i].name.c_str(), x);
+		if (name == sv) {
+			cout << medicines[i].ID<<" -- " << medicines[i].name<<" -- " <<medicines[i].availability<<" -- "<<medicines[i].category<<" -- " << medicines[i].price <<" -- "<< medicines[i].quantity_in_stock << endl;
+			if (medicines[i].quantity_in_stock <= 0) {
+				instock = 0;
+			}
+			found = 1;
+		}
+		i++;
+	}
+	if (instock && found) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
 
 int main()
 {
-	DataForTestPurposes();
+	dataForTestPurposes();
 	saveMedicineDataLocally();
 	saveMedicineDataToArr();
 }
