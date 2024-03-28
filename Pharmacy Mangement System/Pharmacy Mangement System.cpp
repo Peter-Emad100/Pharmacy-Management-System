@@ -210,6 +210,37 @@ void saveAllDataToArr() {
 	saveUserDataToArr();
 }
 
+bool searchForMedicineByName() {
+	string name;
+	cout << "Enter the medicine name" << endl;
+	cin >> name;
+	int x = name.size();
+	if (name[0] >= 'a' && name[0] <= 'z') {
+		name[0] -= 32;
+	}
+	int i = 0;
+	bool found = 0;
+	bool instock = 1;
+	while (medicines[i].ID != 0)
+	{
+		string_view sv(medicines[i].name.c_str(), x);
+		if (name == sv) {
+			cout << medicines[i].ID << " -- " << medicines[i].name << " -- " << medicines[i].availability << " -- " << medicines[i].category << " -- " << medicines[i].price << " -- " << medicines[i].quantity_in_stock << endl;
+			if (medicines[i].quantity_in_stock <= 0) {
+				instock = 0;
+			}
+			found = 1;
+		}
+		i++;
+	}
+	if (instock && found) {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
 void searchForMedicineByCategory() {
 	string category;
 	cin >> category;
