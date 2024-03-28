@@ -9,7 +9,8 @@ using namespace std;
 //**********Declarations***********//
 
 const int Size = 100;
-const int medicine_data = 7;
+const int medicine_data = 10;
+const int user_data = 7;
 
 struct medicine {
 	int ID;
@@ -29,7 +30,7 @@ struct medicine {
 		quantity_in_stock = _quantity;
 	}
 };
-medicine medicines[Size] = {};
+medicine medicines[Size];
 
 struct user {
 	enum role { User, Admin };
@@ -50,7 +51,7 @@ struct user {
 		his_role = _rol;
 	}
 };
-user users[Size] = {};
+user users[Size];
 
 struct order {
 	int userID;
