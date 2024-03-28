@@ -26,3 +26,6 @@ pharmacy)
 - [ ] Manage medicines
 - [ ] Manage orders
 - [ ] Manage payment
+
+### Aims for me (Eyad)
+- [ ] Generate alert to admins when stock of medicine is only 1 item.
