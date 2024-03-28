@@ -9,7 +9,8 @@ using namespace std;
 //**********Declarations***********//
 
 const int Size = 100;
-const int medicine_data = 7;
+const int medicine_data = 10;
+const int user_data = 7;
 
 struct medicine {
 	int ID;
@@ -77,65 +78,136 @@ order orders[Size] = {};
 //**********Functions***********//
 
 void saveMedicineDataLocally() {
-	fstream data;
-	data.open("MedicineData.csv", ios::out);
-	if (data.is_open())
+	fstream file;
+	file.open("MedicineData.csv", ios::out);
+	if (file.is_open())
 	{
-		data << "sep=|" << endl;
-		data << "Name" << "|" << "Category" << "|" << "Description" << "|" << "ID" << "|" << "Quantity in stock" << "|" << "Availabilty" << "|" << "Price" << endl;
+		file << "sep=|" << endl;
+		file << "Name" << "|" << "Category" << "|" << "Description" << "|" << "ID" << "|" << "Quantity in stock" << "|" << "Availabilty" << "|" << "Price" << endl;
 		for (int i = 0; i < 10; i++)
 		{
-			data << medicines[i].name << "|";
-			data << medicines[i].category << "|";
-			data << medicines[i].description << "|";
-			data << medicines[i].ID << "|";
-			data << medicines[i].quantity_in_stock << "|";
-			data << medicines[i].availability << "|";
-			data << medicines[i].price;
-			data << endl;
+			file << medicines[i].name << "|";
+			file << medicines[i].category << "|";
+			file << medicines[i].description << "|";
+			file << medicines[i].ID << "|";
+			file << medicines[i].quantity_in_stock << "|";
+			file << medicines[i].availability << "|";
+			file << medicines[i].price;
+			file << endl;
 		}
-		data.close();
+		file.close();
 	}
 }
 
-void saveMedicineDataToArr() {
-	fstream data;
-	data.open("MedicineData.csv", ios::in);
-	if (data.is_open())
+void saveUserDataLocally() {
+	fstream file;
+	file.open("UserData.csv", ios::out);
+	if (file.is_open())
 	{
-		string line;
-		getline(data, line);                  //Skips a line
-		getline(data, line);                  //Skips a line
-		for (int i = 0; i < 10; i++)
+		file << "sep=|" << endl;
+		file << "Name" << "|" << "ID" << "|" << "Email" << "|" << "Password" << "|" << "Address" << "|" << "Phone" << "|" << "Role" << endl;
+		for (int i = 0; i < user_data; i++)
 		{
-			getline(data, line, '|');
-			medicines[i].name = line;
+			file << users[i].username << "|";
+			file << users[i].ID << "|";
+			file << users[i].email << "|";
+			file << users[i].password << "|";
+			file << users[i].address << "|";
+			file << users[i].phone << "|";
+			file << users[i].his_role;
+			file << endl;
+		}
+		file.close();
+	}
+}
+
+void saveAllDataLocally() {
+	saveMedicineDataLocally();
+	saveUserDataLocally();
+}
+
+void saveMedicineDataToArr() {
+	fstream file;
+	file.open("MedicineData.csv", ios::in);
+	if (file.is_open())
+	{
+		string data;
+		getline(file, data);                  //Skips a data
+		getline(file, data);                  //Skips a data
+		for (int i = 0; i < medicine_data; i++)
+		{
+			getline(file, data, '|');
+			medicines[i].name = data;
 			cout << medicines[i].name << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line, '|');
-			medicines[i].category = line;
+			getline(file, data, '|');
+			medicines[i].category = data;
 			cout << medicines[i].category << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line, '|');
-			medicines[i].description = line;
+			getline(file, data, '|');
+			medicines[i].description = data;
 			cout << medicines[i].description << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line, '|');
-			medicines[i].ID = stoi(line);
+			getline(file, data, '|');
+			medicines[i].ID = stoi(data);
 			cout << medicines[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line, '|');
+			getline(file, data, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
 				warningOfShortage();
 			}*/
-			medicines[i].quantity_in_stock = stoi(line);
+			medicines[i].quantity_in_stock = stoi(data);
 			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line, '|');
-			medicines[i].availability = stoi(line);
+			getline(file, data, '|');
+			medicines[i].availability = stoi(data);
 			cout << medicines[i].availability << endl;             //Testing the outcomes. Best to keep here, so don't delete//
-			getline(data, line);
-			medicines[i].price = stof(line);
+			getline(file, data);
+			medicines[i].price = stof(data);
 			cout << medicines[i].price << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
 		}
-		data.close();
+		file.close();
 	}
+}
+
+void saveUserDataToArr() {
+	fstream file;
+	file.open("UserData.csv", ios::in);
+	if (file.is_open())
+	{
+		string data;
+		getline(file, data);                  //Skips a data
+		getline(file, data);                  //Skips a data
+		for (int i = 0; i < user_data; i++)
+		{
+			getline(file, data, '|');
+			users[i].username = data;
+			cout << users[i].username << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			users[i].ID = stoi(data);
+			cout << users[i].ID << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			users[i].email = data;
+			cout << users[i].email << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			users[i].password = data;
+			cout << users[i].password << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			users[i].address = data;
+			cout << users[i].address << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			users[i].phone = data;
+			cout << users[i].phone << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data);
+			if (stoi(data) == 1)
+				users[i].his_role = user::Admin;
+			else
+				users[i].his_role = user::User;
+			cout << users[i].his_role << endl << endl;             //Testing the outcomes. Best to keep here, so don't delete//
+		}
+		file.close();
+	}
+}
+
+void saveAllDataToArr() {
+	saveMedicineDataToArr();
+	saveUserDataToArr();
 }
 
 void searchForMedicineByCategory() {
@@ -202,6 +274,6 @@ void DataForTestPurposes() {
 int main()
 {
 	DataForTestPurposes();
-	saveMedicineDataLocally();
-	saveMedicineDataToArr();
+	saveAllDataLocally();
+	saveAllDataToArr();
 }
