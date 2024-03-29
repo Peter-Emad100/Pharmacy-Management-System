@@ -327,7 +327,7 @@ void searchForMedicineByCategory() {
 	}
 }
 
-void showOrderReciept(order lastOrder) {
+void showOrderReceipt(order lastOrder) {
 	cout << "order date : " << lastOrder.orderDate << endl;
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
@@ -376,7 +376,8 @@ void dataForTestPurposes() {
 int main()
 {
 	dataForTestPurposes();
-	saveAllDataLocally();
-	saveAllDataToArr();
+	//saveAllDataLocally();
+	//saveAllDataToArr();
+	//showOrderReceipt(orders[0]);
 	logInInterface();
 }
