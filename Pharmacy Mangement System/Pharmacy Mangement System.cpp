@@ -4,6 +4,8 @@
 #include <fstream>
 #include <algorithm>
 #include <string>
+#include <sstream>
+#include <iomanip>
 using namespace std;
 
 //**********Declarations***********//
@@ -78,60 +80,65 @@ order orders[Size] = {};
 //**********Functions***********//
 bool validateUser(string username, string password, user& currentUser)
 {
-	for (int i =0; i < user_data; ++i )
+	int userIndex = 0;
+
+	// Loop through the users until a user with userID = 0 is found,
+	// indicating that there are no more users in our database
+	while (users[userIndex].ID != 0)
 	{
-     if (users[i].username == username && users[i].password == password) 
-	 {
-		currentUser = users[i];     //Avoiding any kind of problem when showing permissions based on the role 
-		return true;
-	 }
-	 
+		if (users[userIndex].username == username && users[userIndex].password == password)
+		{
+			currentUser = users[userIndex];     //Avoiding any kind of problem when showing permissions based on the role 
+			return true;
+		}
+		userIndex++;
+
 	}
 	return false;
 }
 void logInInterface()
 {
-	
+
 	user currentUser; //Temp to keep the current user's data
 
-    cout <<"Enter your username: ";
+	cout << "Enter your username: ";
 	cin >> currentUser.username;
-	cout <<"Enter your password: ";
+	cout << "Enter your password: ";
 	cin >> currentUser.password;
 
-	if(validateUser(currentUser.username, currentUser.password, currentUser)) {
-        cout <<"Log in success. Welcome back, " <<currentUser.username <<" :D\n-------------------------------------------\n";
+	if (validateUser(currentUser.username, currentUser.password, currentUser)) {
+		cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
 		if (currentUser.his_role == user::User)
 		{
-            cout << "1- Search for medicine by name\n";
+			cout << "1- Search for medicine by name\n";
 			cout << "2- Search for medicine by category\n";
-            cout << "3- Add order\n";
+			cout << "3- Add order\n";
 			cout << "4- Choose payment method\n";
-            cout << "5- View order\n";
-            cout << "6- Request drug\n";
-            cout << "7- View all previous orders\n";
+			cout << "5- View order\n";
+			cout << "6- Request drug\n";
+			cout << "7- View all previous orders\n";
 			cout << "8- Log out\n";
 		}
-		else 
+		else
 		{
-         cout << "1- Add new user\n";
-		 cout << "2- Remove user\n";
-		 cout << "3- Add new medicine\n";
-         cout << "4- Remove medicine\n";
-		 cout << "5- Manage orders\n";
-		 cout << "6- Manage payments\n";
-		 cout << "7- Search for medicine by name\n";
-		 cout << "8- Search for medicine by category\n";
-         cout << "9- Add order\n";
-		 cout << "10- Choose payment method\n";
-         cout << "11- View order\n";
-         cout << "12- Request drug\n";
-         cout << "13- View all previous orders\n";
+			cout << "1- Add new user\n";
+			cout << "2- Remove user\n";
+			cout << "3- Add new medicine\n";
+			cout << "4- Remove medicine\n";
+			cout << "5- Manage orders\n";
+			cout << "6- Manage payments\n";
+			cout << "7- Search for medicine by name\n";
+			cout << "8- Search for medicine by category\n";
+			cout << "9- Add order\n";
+			cout << "10- Choose payment method\n";
+			cout << "11- View order\n";
+			cout << "12- Request drug\n";
+			cout << "13- View all previous orders\n";
 		}
 	}
-	else 
+	else
 	{
-	cout <<"Invalid credentials. The email or password you entered is incorrect. Please try again.\n ";
+		cout << "Invalid credentials. The username or password you entered is incorrect. Please try again.\n ";
 	}
 }
 
@@ -217,7 +224,7 @@ void saveMedicineDataToArr() {
 			getline(file, data, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
-				warningOfShortage();                                       //A funtion to make later. For admins, in order to get an alert when they are low in sth >:3    
+				warningOfShortage();                                       //A funtion to make later. For admins, in order to get an alert when they are low in sth >:3
 			}*/
 			medicines[i].quantity_in_stock = stoi(data);
 			cout << medicines[i].quantity_in_stock << endl;             //Testing the outcomes. Best to keep here, so don't delete//
@@ -367,12 +374,116 @@ void dataForTestPurposes() {
 	int medicine3[] = { 9, 4,5,7 ,0 };
 	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29");
 }
+void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]) {
+	char choice = 'a';
+	int medicine1[10]{};
+	int quantity1[10]{};
+	float sum = 0;
+
+	//take medecine id and quantity
+	for (int i = 0; i < 10; i++)
+	{
+		cout << "select medicine id" << endl;
+		int medicineid = -1;
+		cin >> medicineid;
+		medicineid = medicineid - 1;
+		medicine1[i] = medicineid+1;
+
+		cout << "select quantity" << endl;
+		int quantity = 0;
+		cin >> quantity;
+		quantity1[i] = quantity;
+
+		while (quantity>m[medicineid].quantity_in_stock)
+		{
+			cout << "quantity in stock is : " << m[medicineid].quantity_in_stock<<endl;
+			cout << "select quantity" << endl;
+			cin >> quantity;
+		}
+		//calculate total price of each medicine
+		sum =sum +(quantity * m[medicineid].price);
+		cout << "Total Price : " << sum << endl;
+
+		cout << "Do you want to add medicine?" << "y" << "/" << "n"<<endl;
+		cin >> choice;
+		if (choice != 'y')
+		{
+			break;
+		}
+	}
+	
+	int Payment_method=-1;
+	//choose payment method
+	while (true)
+	{
+		cout << "Choose payment method (Cash, pick at pharmacy, add visa)(1,2,3)" << endl;
+		cin >> Payment_method;
+
+		if (Payment_method == 1)
+		{
+			cout << "payment with cash" << endl;
+
+		}
+		else if (Payment_method == 2)
+		{
+			cout << "pick at pharmacy" << endl;
+		}
+		else if (Payment_method == 3)
+		{
+			cout << "payment with visa" << endl;
+		}
+
+		cout << "are you sure? y / n " << endl;
+		char choice2;
+		cin >> choice2;
+
+		if (choice2=='y')
+		{
+			break;
+		}
+	}
+	
+	cout << "ordertime : " << orderTime << endl;
+
+	//create an order
+	orders[0].initialize(customerID, orderDate, medicine1,sum, shipDate);
+
+
+
+}
+// convert date string to integers
+void parseDateString(const std::string& dateString, int& year, int& month, int& day) {
+    std::stringstream ss(dateString);
+    char dash;
+    ss >> year >> dash >> month >> dash >> day;
+}
+
+// calculate the difference in days between two dates
+int dateDifference(const std::string& date1, const std::string& date2) {
+    int year1, month1, day1;
+    int year2, month2, day2;
+    
+    parseDateString(date1, year1, month1, day1);
+    parseDateString(date2, year2, month2, day2);
+
+    // Calculate the total number of days for each date
+    int days1 = year1 * 365 + month1 * 30 + day1;
+    int days2 = year2 * 365 + month2 * 30 + day2;
+
+    // Calculate the difference in days
+    int difference = days2 - days1;
+
+    return difference;
+}
+
 
 int main()
 {
 	dataForTestPurposes();
 	//saveAllDataLocally();
 	//saveAllDataToArr();
-	//showOrderReceipt(orders[0]);
+	int orderTime = dateDifference("2024-03-27", "2024-05-27");
+	makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
+	showOrderReceipt(orders[0]);
 	logInInterface();
 }
