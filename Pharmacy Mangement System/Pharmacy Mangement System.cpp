@@ -78,13 +78,18 @@ order orders[Size] = {};
 //**********Functions***********//
 bool validateUser(string username, string password, user& currentUser)
 {
-	for (int i =0; i < user_data; ++i )
+	int userIndex =0;
+
+	// Loop through the users until a user with userID = 0 is found,
+    // indicating that there are no more users in our database
+	while (users[userIndex].ID != 0) 
 	{
-     if (users[i].username == username && users[i].password == password) 
+     if (users[userIndex].username == username && users[userIndex].password == password) 
 	 {
-		currentUser = users[i];     //Avoiding any kind of problem when showing permissions based on the role 
+		currentUser = users[userIndex];     //Avoiding any kind of problem when showing permissions based on the role 
 		return true;
 	 }
+	 userIndex++;
 	 
 	}
 	return false;
@@ -131,7 +136,7 @@ void logInInterface()
 	}
 	else 
 	{
-	cout <<"Invalid credentials. The email or password you entered is incorrect. Please try again.\n ";
+	cout <<"Invalid credentials. The username or password you entered is incorrect. Please try again.\n ";
 	}
 }
 
