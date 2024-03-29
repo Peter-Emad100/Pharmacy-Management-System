@@ -76,6 +76,71 @@ order orders[Size] = {};
 
 
 //**********Functions***********//
+bool validateUser(string username, string password, user& currentUser)
+{
+	for (int i =0; i < user_data; ++i )
+	{
+     if (users[i].username == username && users[i].password == password) 
+	 {
+		currentUser = users[i];     //Avoiding any kind of problem when showing permissions based on the role 
+		return true;
+	 }
+	 
+	}
+	return false;
+}
+void logInInterface()
+{
+	
+	user currentUser; //Temp to keep the current user's data
+
+    cout <<"Enter your username: ";
+	cin >> currentUser.username;
+	cout <<"Enter your password: ";
+	cin >> currentUser.password;
+
+	if(validateUser(currentUser.username, currentUser.password, currentUser)) {
+        cout <<"Log in success. Welcome back, " <<currentUser.username <<" :D\n-------------------------------------------\n";
+		if (currentUser.his_role == user::User)
+		{
+            cout << "1- Search for medicine by name\n";
+			cout << "2- Search for medicine by category\n";
+            cout << "3- Add order\n";
+			cout << "4- Choose payment method\n";
+            cout << "5- View order\n";
+            cout << "6- Request drug\n";
+            cout << "7- View all previous orders\n";
+			cout << "8- Log out\n";
+		}
+		else 
+		{
+         cout << "1- Add new user\n";
+		 cout << "2- Remove user\n";
+		 cout << "3- Add new medicine\n";
+         cout << "4- Remove medicine\n";
+		 cout << "5- Manage orders\n";
+		 cout << "6- Manage payments\n";
+		 cout << "7- Search for medicine by name\n";
+		 cout << "8- Search for medicine by category\n";
+         cout << "9- Add order\n";
+		 cout << "10- Choose payment method\n";
+         cout << "11- View order\n";
+         cout << "12- Request drug\n";
+         cout << "13- View all previous orders\n";
+		}
+	}
+	else 
+	{
+	cout <<"Invalid credentials. The email or password you entered is incorrect. Please try again.\n ";
+	}
+}
+
+
+void logOut()
+{
+	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
+}
+
 
 void saveMedicineDataLocally() {
 	fstream file;
@@ -308,4 +373,5 @@ int main()
 	dataForTestPurposes();
 	saveAllDataLocally();
 	saveAllDataToArr();
+	logInInterface();
 }
