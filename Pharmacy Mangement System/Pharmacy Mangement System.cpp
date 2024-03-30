@@ -76,8 +76,12 @@ struct order {
 };
 order orders[Size] = {};
 
-
+//********Declares***********//
+void editUserCredentials(int index);
+void saveUserDataLocally();
 //**********Functions***********//
+
+
 
 void saveOneUserDataLocally() {
 	fstream file;
@@ -167,6 +171,7 @@ bool validateUser(string username, string password, user& currentUser)
 		if (users[userIndex].username == username && users[userIndex].password == password)
 		{
 			currentUser = users[userIndex];     //Avoiding any kind of problem when showing permissions based on the role 
+			currentUser.ID = users[userIndex].ID;
 			return true;
 		}
 		userIndex++;
@@ -221,6 +226,7 @@ void logInInterface()
 				cout << "12- Request drug\n";
 				cout << "13- View all previous orders\n";
 			}
+			editUserCredentials(currentUser.ID - 1);
 		}
 
 
@@ -232,22 +238,23 @@ void logInInterface()
 	}
 }
 
-void editUserCredentials(user& currentUser)
+void editUserCredentials(int index)
 {
 	cout <<"What are you willing to change ?\n";
 	cout <<"1- Phone Number\n";
 	cout <<"2- Address\n";
 	int choice;
-	cin >> choice;
 	 do {
      
         cin >> choice;
         if (choice == 1) {
-			cin >> currentUser.phone ;
+			cout << "Enter your new phone number: ";
+			cin >> users[index].phone;
            
         } 
 		else if (choice == 2) {
-            cin >> currentUser.address;
+			cout << "Enter your new adress: ";
+            cin >> users[index].address;
         } 
 		else {
             cout << "Invalid choice. Please enter 1 for Phone Number or 2 for Address.\n";
@@ -294,7 +301,7 @@ void saveUserDataLocally() {
 	{
 		file << "sep=|\n";
 		file << "Name" << '|' << "ID" << '|' << "Email" << '|' << "Password" << '|' << "Address" << '|' << "Phone" << '|' << "Role\n";
-		for (int i = 0;users[i].ID==0; i++)
+		for (int i = 0;i < user_data; i++)
 		{
 			file << users[i].username << '|';
 			file << users[i].ID << '|';
@@ -599,12 +606,11 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 
 int main()
 {
-	//dataForTestPurposes();
-	//saveAllDataLocally();
-	//saveAllDataToArr();
+	// dataForTestPurposes();
+	// saveAllDataLocally();
+	saveAllDataToArr();
 	signUp();
 	logInInterface();
-	
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
