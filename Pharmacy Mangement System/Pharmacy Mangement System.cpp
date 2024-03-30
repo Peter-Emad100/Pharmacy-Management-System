@@ -11,8 +11,8 @@ using namespace std;
 //**********Declarations***********//
 
 const int Size = 100;
-const int medicine_data = 10;
-const int user_data = 7;
+int medicine_data = 0;
+int user_data = 0;
 
 struct medicine {
 	int ID;
@@ -96,6 +96,7 @@ bool validateUser(string username, string password, user& currentUser)
 	}
 	return false;
 }
+
 void logInInterface()
 {
 	bool loggedIn = false;
@@ -153,12 +154,10 @@ void logInInterface()
 	}
 }
 
-
 void logOut()
 {
 	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
 }
-
 
 void saveMedicineDataLocally() {
 	fstream file;
@@ -205,6 +204,15 @@ void saveUserDataLocally() {
 	}
 }
 
+//void saveOneUserDataLocally() {
+//	fstream file;
+//	file.open("UserData.csv", ios::app);
+//	if (file.is_open())
+//	{
+//		file << users[]
+//	}
+//}
+
 void saveAllDataLocally() {
 	saveMedicineDataLocally();
 	saveUserDataLocally();
@@ -218,9 +226,8 @@ void saveMedicineDataToArr() {
 		string data;
 		getline(file, data);                  //Skips a data
 		getline(file, data);                  //Skips a data
-		for (int i = 0; i < medicine_data; i++)
+		for (int i = 0; getline(file, data,'|'); i++)
 		{
-			getline(file, data, '|');
 			medicines[i].name = data;
 			cout << medicines[i].name << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
@@ -245,6 +252,7 @@ void saveMedicineDataToArr() {
 			getline(file, data);
 			medicines[i].price = stof(data);
 			cout << medicines[i].price << "\n" << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			medicine_data++;
 		}
 		file.close();
 	}
@@ -258,9 +266,8 @@ void saveUserDataToArr() {
 		string data;
 		getline(file, data);                  //Skips a data
 		getline(file, data);                  //Skips a data
-		for (int i = 0; i < user_data; i++)
+		for(int i=0; getline(file, data,'|'); i++)
 		{
-			getline(file, data, '|');
 			users[i].username = data;
 			cout << users[i].username << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
@@ -284,6 +291,7 @@ void saveUserDataToArr() {
 			else
 				users[i].his_role = user::User;
 			cout << users[i].his_role << "\n" << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			user_data++;
 		}
 		file.close();
 	}
@@ -491,10 +499,10 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 
 int main()
 {
-	dataForTestPurposes();
+	//dataForTestPurposes();
 	//saveAllDataLocally();
-	//saveAllDataToArr();
-	logInInterface();
+	saveAllDataToArr();
+	//logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
