@@ -165,18 +165,18 @@ void saveMedicineDataLocally() {
 	if (file.is_open())
 	{
 		file << "sep=|\n";
-		file << "Name" << "|" << "Category" << "|" << "Description" << "|" << "ID" << "|" << "Quantity in stock" << "|" << "Availabilty" << "|" << "Price\n";
+		file << "Name" << '|' << "Category" << '|' << "Description" << '|' << "ID" << '|' << "Quantity in stock" << '|' << "Availabilty" << '|' << "Price\n";
 		for (int i = 0; i < 10; i++)
 		{
-			file << medicines[i].name << "|";
-			file << medicines[i].category << "|";
-			file << medicines[i].description << "|";
-			file << medicines[i].ID << "|";
-			file << medicines[i].quantity_in_stock << "|";
+			file << medicines[i].name << '|';
+			file << medicines[i].category << '|';
+			file << medicines[i].description << '|';
+			file << medicines[i].ID << '|';
+			file << medicines[i].quantity_in_stock << '|';
 
-			file << medicines[i].availability << "|";
+			file << medicines[i].availability << '|';
 			file << medicines[i].price;
-			file << "\n";
+			file << '\n';
 		}
 		file.close();
 	}
@@ -188,30 +188,38 @@ void saveUserDataLocally() {
 	if (file.is_open())
 	{
 		file << "sep=|\n";
-		file << "Name" << "|" << "ID" << "|" << "Email" << "|" << "Password" << "|" << "Address" << "|" << "Phone" << "|" << "Role\n";
-		for (int i = 0; i < user_data; i++)
+		file << "Name" << '|' << "ID" << '|' << "Email" << '|' << "Password" << '|' << "Address" << '|' << "Phone" << '|' << "Role\n";
+		for (int i = 0;users[i].ID==0; i++)
 		{
-			file << users[i].username << "|";
-			file << users[i].ID << "|";
-			file << users[i].email << "|";
-			file << users[i].password << "|";
-			file << users[i].address << "|";
-			file << users[i].phone << "|";
+			file << users[i].username << '|';
+			file << users[i].ID << '|';
+			file << users[i].email << '|';
+			file << users[i].password << '|';
+			file << users[i].address << '|';
+			file << users[i].phone << '|';
 			file << users[i].his_role;
-			file << "\n";
+			file << '\n';
 		}
 		file.close();
 	}
 }
 
-//void saveOneUserDataLocally() {
-//	fstream file;
-//	file.open("UserData.csv", ios::app);
-//	if (file.is_open())
-//	{
-//		file << users[]
-//	}
-//}
+void saveOneUserDataLocally() {
+	fstream file;
+	file.open("UserData.csv", ios::app);
+	if (file.is_open())
+	{
+		file << users[user_data].username << '|';
+		file << users[user_data].ID << '|';
+		file << users[user_data].email << '|';
+		file << users[user_data].password << '|';
+		file << users[user_data].address << '|';
+		file << users[user_data].phone << '|';
+		file << '\n';
+		user_data++;
+	}
+	file.close();
+}
 
 void saveAllDataLocally() {
 	saveMedicineDataLocally();
@@ -229,31 +237,32 @@ void saveMedicineDataToArr() {
 		for (int i = 0; getline(file, data,'|'); i++)
 		{
 			medicines[i].name = data;
-			cout << medicines[i].name << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].name << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			medicines[i].category = data;
-			cout << medicines[i].category << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].category << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			medicines[i].description = data;
-			cout << medicines[i].description << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].description << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			medicines[i].ID = stoi(data);
-			cout << medicines[i].ID << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].ID << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{
 				warningOfShortage();                                       //A funtion to make later. For admins, in order to get an alert when they are low in sth >:3
 			}*/
 			medicines[i].quantity_in_stock = stoi(data);
-			cout << medicines[i].quantity_in_stock << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].quantity_in_stock << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			medicines[i].availability = stoi(data);
-			cout << medicines[i].availability << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].availability << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data);
 			medicines[i].price = stof(data);
-			cout << medicines[i].price << "\n" << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << medicines[i].price << '\n' << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			medicine_data++;
 		}
+		cout << endl << medicine_data;
 		file.close();
 	}
 }
@@ -269,30 +278,31 @@ void saveUserDataToArr() {
 		for(int i=0; getline(file, data,'|'); i++)
 		{
 			users[i].username = data;
-			cout << users[i].username << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].username << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			users[i].ID = stoi(data);
-			cout << users[i].ID << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].ID << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			users[i].email = data;
-			cout << users[i].email << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].email << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			users[i].password = data;
-			cout << users[i].password << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].password << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			users[i].address = data;
-			cout << users[i].address << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].address << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			users[i].phone = data;
-			cout << users[i].phone << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].phone << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data);
 			if (stoi(data) == 1)
 				users[i].his_role = user::Admin;
 			else
 				users[i].his_role = user::User;
-			cout << users[i].his_role << "\n" << "\n";             //Testing the outcomes. Best to keep here, so don't delete//
+			cout << users[i].his_role << '\n' << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			user_data++;
 		}
+		cout << endl << user_data;
 		file.close();
 	}
 }
@@ -317,7 +327,7 @@ bool searchForMedicineByName() {
 	{
 		string_view sv(medicines[i].name.c_str(), x);
 		if (name == sv) {
-			cout << medicines[i].ID << " -- " << medicines[i].name << " -- " << medicines[i].availability << " -- " << medicines[i].category << " -- " << medicines[i].price << " -- " << medicines[i].quantity_in_stock << "\n";
+			cout << medicines[i].ID << " -- " << medicines[i].name << " -- " << medicines[i].availability << " -- " << medicines[i].category << " -- " << medicines[i].price << " -- " << medicines[i].quantity_in_stock << '\n';
 			if (medicines[i].quantity_in_stock <= 0) {
 				instock = 0;
 			}
@@ -339,7 +349,7 @@ void searchForMedicineByCategory() {
 	bool found = false;
 	for (int i = 0; i < Size; i++) {
 		if (category == medicines[i].category) {
-			cout << medicines[i].name << " -- " << medicines[i].ID << " -- " << medicines[i].category << "\n";
+			cout << medicines[i].name << " -- " << medicines[i].ID << " -- " << medicines[i].category << '\n';
 			found = true;
 		}
 	}
@@ -349,15 +359,15 @@ void searchForMedicineByCategory() {
 }
 
 void showOrderReceipt(order lastOrder) {
-	cout << "order date : " << lastOrder.orderDate << "\n";
+	cout << "order date : " << lastOrder.orderDate << '\n';
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
-		cout << "medicine id : " << lastOrder.medicine_ID[i] << "\n";
+		cout << "medicine id : " << lastOrder.medicine_ID[i] << '\n';
 		i++;
 	}
-	cout << "user id : " << lastOrder.userID << "\n";
-	cout << "total price : " << lastOrder.totalPrice << "\n";
-	cout << "ship date : " << lastOrder.shipDate << "\n";
+	cout << "user id : " << lastOrder.userID << '\n';
+	cout << "total price : " << lastOrder.totalPrice << '\n';
+	cout << "ship date : " << lastOrder.shipDate << '\n';
 }
 
 void dataForTestPurposes() {
@@ -416,13 +426,13 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 
 		while (quantity > m[medicineid].quantity_in_stock)
 		{
-			cout << "quantity in stock is : " << m[medicineid].quantity_in_stock << "\n";
+			cout << "quantity in stock is : " << m[medicineid].quantity_in_stock << '\n';
 			cout << "select quantity\n";
 			cin >> quantity;
 		}
 		//calculate total price of each medicine
 		sum = sum + (quantity * m[medicineid].price);
-		cout << "Total Price : " << sum << "\n";
+		cout << "Total Price : " << sum << '\n';
 
 		cout << "Do you want to add medicine?" << "y" << "/" << "n\n";
 		cin >> choice;
@@ -463,7 +473,7 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 		}
 	}
 
-	cout << "ordertime : " << orderTime << "\n";
+	cout << "ordertime : " << orderTime << '\n';
 
 	//create an order
 	orders[0].initialize(customerID, orderDate, medicine1, sum, shipDate);
