@@ -78,6 +78,84 @@ order orders[Size] = {};
 
 
 //**********Functions***********//
+
+void saveOneUserDataLocally() {
+	fstream file;
+	file.open("UserData.csv", ios::app);
+	if (file.is_open())
+	{
+		file << users[user_data].username << '|';
+		file << users[user_data].ID << '|';
+		file << users[user_data].email << '|';
+		file << users[user_data].password << '|';
+		file << users[user_data].address << '|';
+		file << users[user_data].phone << '|';
+		file <<users[user_data].his_role ;
+		file << '\n';
+		user_data++;
+	}
+	file.close();
+}
+
+bool isUsernameTaken(string username) {
+    int i = 0;
+    while (users[i].ID != 0) {
+        if (users[i].username == username) {
+            return true;
+        }
+        ++i;
+    }
+    return false;
+}
+
+void signUp() {
+    user newUser;
+    int id = user_data + 1; // Next available ID
+
+    newUser.ID = id;
+
+    cout << "Enter your username: ";
+    cin >> newUser.username;
+    while (isUsernameTaken(newUser.username))  //Checks if username is already taken in our database or no.
+	{
+        cout << "A user with that username already exists. Please enter a different username: ";
+        cin >> newUser.username;
+    }
+
+    cout << "Enter your password: ";
+    cin >> newUser.password;
+    cout << "Enter your e-mail: ";
+    cin >> newUser.email;
+    cout << "Enter your address: ";
+    cin >> newUser.address;
+    cout << "Enter your phone: ";
+    cin >> newUser.phone;
+
+    int roleChoice;
+    do {
+        cout << "Pick your role (1 for User, 2 for Admin): ";
+        cin >> roleChoice;
+        if (roleChoice == 1) {
+            newUser.his_role = user::User;
+        } 
+		else if (roleChoice == 2) {
+            newUser.his_role = user::Admin;
+        } 
+		else {
+            cout << "Invalid role choice. Please enter 1 for User or 2 for Admin.\n";
+        }
+    } while (roleChoice != 1 && roleChoice != 2); // Loop until a valid role choice is made
+
+    users[id - 1] = newUser; // Save the new user data into our users array
+    
+    cout << "Congratulations! Your account has been successfully created.\n";
+
+
+	saveOneUserDataLocally();
+}
+
+
+
 bool validateUser(string username, string password, user& currentUser)
 {
 	int userIndex = 0;
@@ -154,6 +232,33 @@ void logInInterface()
 	}
 }
 
+void editUserCredentials(user& currentUser)
+{
+	cout <<"What are you willing to change ?\n";
+	cout <<"1- Phone Number\n";
+	cout <<"2- Address\n";
+	int choice;
+	cin >> choice;
+	 do {
+     
+        cin >> choice;
+        if (choice == 1) {
+			cin >> currentUser.phone ;
+           
+        } 
+		else if (choice == 2) {
+            cin >> currentUser.address;
+        } 
+		else {
+            cout << "Invalid choice. Please enter 1 for Phone Number or 2 for Address.\n";
+        }
+    } while (choice != 1 && choice != 2); // Loop until a valid choice is made
+
+	saveUserDataLocally();
+
+
+}
+
 void logOut()
 {
 	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
@@ -204,22 +309,7 @@ void saveUserDataLocally() {
 	}
 }
 
-void saveOneUserDataLocally() {
-	fstream file;
-	file.open("UserData.csv", ios::app);
-	if (file.is_open())
-	{
-		file << users[user_data].username << '|';
-		file << users[user_data].ID << '|';
-		file << users[user_data].email << '|';
-		file << users[user_data].password << '|';
-		file << users[user_data].address << '|';
-		file << users[user_data].phone << '|';
-		file << '\n';
-		user_data++;
-	}
-	file.close();
-}
+
 
 void saveAllDataLocally() {
 	saveMedicineDataLocally();
@@ -302,7 +392,7 @@ void saveUserDataToArr() {
 			cout << users[i].his_role << '\n' << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			user_data++;
 		}
-		cout << endl << user_data;
+		
 		file.close();
 	}
 }
@@ -511,8 +601,10 @@ int main()
 {
 	//dataForTestPurposes();
 	//saveAllDataLocally();
-	saveAllDataToArr();
-	//logInInterface();
+	//saveAllDataToArr();
+	signUp();
+	logInInterface();
+	
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
