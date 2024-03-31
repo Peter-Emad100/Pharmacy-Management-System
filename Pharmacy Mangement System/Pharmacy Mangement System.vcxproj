@@ -129,6 +129,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Pharmacy Mangement System.cpp" />
+    <ClCompile Include="SaveData.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SaveData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
