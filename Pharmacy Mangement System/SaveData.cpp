@@ -180,6 +180,23 @@ void saveUserDataToArr() {
 		file.close();
 	}
 }
+void saveOneUserDataLocally() {
+	fstream file;
+	file.open("UserData.csv", ios::app);
+	if (file.is_open())
+	{
+		file << users[user_data].username << '|';
+		file << users[user_data].ID << '|';
+		file << users[user_data].email << '|';
+		file << users[user_data].password << '|';
+		file << users[user_data].address << '|';
+		file << users[user_data].phone << '|';
+		file <<users[user_data].his_role ;
+		file << '\n';
+		user_data++;
+	}
+	file.close();
+}
 
 void saveAllDataToArr() {
 	saveMedicineDataToArr();

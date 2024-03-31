@@ -75,31 +75,23 @@ struct order {
 
 	}
 };
-extern order orders[Size] = {};
+order orders[Size] ={};
 
-//********Declares***********//
-
+//********Function Declares***********//
+void dataForTestPurposes();
+bool isUsernameTaken(string username);
+void signUp();
+bool validateUser(string username, string password, user& currentUser);
+void logInInterface();
 void editUserCredentials(int index);
+bool searchForMedicineByName();
+void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]);
+void showOrderReceipt(order lastOrder);
+void logOut();
 
 //**********Functions***********//
 
-void saveOneUserDataLocally() {
-	fstream file;
-	file.open("UserData.csv", ios::app);
-	if (file.is_open())
-	{
-		file << users[user_data].username << '|';
-		file << users[user_data].ID << '|';
-		file << users[user_data].email << '|';
-		file << users[user_data].password << '|';
-		file << users[user_data].address << '|';
-		file << users[user_data].phone << '|';
-		file <<users[user_data].his_role ;
-		file << '\n';
-		user_data++;
-	}
-	file.close();
-}
+
 
 bool isUsernameTaken(string username) {
     int i = 0;
@@ -137,7 +129,7 @@ void signUp() {
 
     int roleChoice;
     do {
-        cout << "Pick your role (1 for User, 2 for Admin): ";
+        cout << "Pick your role\n 1-User\n 2-Admin\n: ";
         cin >> roleChoice;
         if (roleChoice == 1) {
             newUser.his_role = user::User;
@@ -468,7 +460,7 @@ int main()
 {
 	// dataForTestPurposes();
 	// saveAllDataLocally();
-	saveAllDataToArr();
+	//saveAllDataToArr();
 	signUp();
 	logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
