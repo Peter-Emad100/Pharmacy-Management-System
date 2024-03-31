@@ -82,6 +82,8 @@ void dataForTestPurposes();
 bool isUsernameTaken(string username);
 void signUp();
 bool validateUser(string username, string password, user& currentUser);
+void userPermissions();
+void adminPermissions();
 void logInInterface();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
@@ -123,13 +125,14 @@ void signUp() {
     cout << "Enter your e-mail: ";
     cin >> newUser.email;
     cout << "Enter your address: ";
-    cin >> newUser.address;
+	cin.ignore(1, '\n');
+	getline(cin, newUser.address);
     cout << "Enter your phone: ";
     cin >> newUser.phone;
 
     int roleChoice;
     do {
-        cout << "Pick your role\n 1-User\n 2-Admin\n: ";
+        cout << "Pick your role\n1-User\n2-Admin\n";
         cin >> roleChoice;
         if (roleChoice == 1) {
             newUser.his_role = user::User;
@@ -170,6 +173,33 @@ bool validateUser(string username, string password, user& currentUser)
 	return false;
 }
 
+void userPermissions() {
+	cout << "1- Search for medicine by name\n";
+	cout << "2- Search for medicine by category\n";
+	cout << "3- Add order\n";
+	cout << "4- Choose payment method\n";
+	cout << "5- View order\n";
+	cout << "6- Request drug\n";
+	cout << "7- View all previous orders\n";
+	cout << "8- Log out\n";
+}
+
+void adminPermissions() {
+	cout << "1- Add new user\n";
+	cout << "2- Remove user\n";
+	cout << "3- Add new medicine\n";
+	cout << "4- Remove medicine\n";
+	cout << "5- Manage orders\n";
+	cout << "6- Manage payments\n";
+	cout << "7- Search for medicine by name\n";
+	cout << "8- Search for medicine by category\n";
+	cout << "9- Add order\n";
+	cout << "10- Choose payment method\n";
+	cout << "11- View order\n";
+	cout << "12- Request drug\n";
+	cout << "13- View all previous orders\n";
+}
+
 void logInInterface()
 {
 	bool loggedIn = false;
@@ -191,30 +221,13 @@ void logInInterface()
 
 			if (currentUser.his_role == user::User)
 			{
-				cout << "1- Search for medicine by name\n";
-				cout << "2- Search for medicine by category\n";
-				cout << "3- Add order\n";
-				cout << "4- Choose payment method\n";
-				cout << "5- View order\n";
-				cout << "6- Request drug\n";
-				cout << "7- View all previous orders\n";
-				cout << "8- Log out\n";
+				userPermissions();
 			}
 			else
 			{
-				cout << "1- Add new user\n";
-				cout << "2- Remove user\n";
-				cout << "3- Add new medicine\n";
-				cout << "4- Remove medicine\n";
-				cout << "5- Manage orders\n";
-				cout << "6- Manage payments\n";
-				cout << "7- Search for medicine by name\n";
-				cout << "8- Search for medicine by category\n";
-				cout << "9- Add order\n";
-				cout << "10- Choose payment method\n";
-				cout << "11- View order\n";
-				cout << "12- Request drug\n";
-				cout << "13- View all previous orders\n";
+				adminPermissions();
+				int decision;
+				cin >> decision;
 			}
 			editUserCredentials(currentUser.ID - 1);
 		}
@@ -244,7 +257,8 @@ void editUserCredentials(int index)
         } 
 		else if (choice == 2) {
 			cout << "Enter your new adress: ";
-            cin >> users[index].address;
+			cin.ignore(1, '\n');
+			getline(cin, users[index].address);
         } 
 		else {
             cout << "Invalid choice. Please enter 1 for Phone Number or 2 for Address.\n";
@@ -458,10 +472,10 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 
 int main()
 {
-	// dataForTestPurposes();
-	// saveAllDataLocally();
-	//saveAllDataToArr();
-	signUp();
+	//dataForTestPurposes();
+	//saveAllDataLocally();
+	saveAllDataToArr();
+	//signUp();
 	logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
