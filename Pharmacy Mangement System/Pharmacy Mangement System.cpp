@@ -14,18 +14,22 @@ const int Size = 100;
 const int medicine_data = 10;
 const int user_data = 7;
 
+int chosenOption; // variable to choose with which order you want to go through after log in
+
 struct medicine {
 	int ID;
 	string name;
 	string description;
+	string concentration;
 	bool availability;
 	string category;
 	float price;
 	int quantity_in_stock;
-	void initialize(int _id, string _name, string _desc, bool _avail, string _category, float _price, int _quantity) {
+	void initialize(int _id, string _name, string _desc, string _conc, bool _avail, string _category, float _price, int _quantity) {
 		ID = _id;
 		name = _name;
 		description = _desc;
+		concentration = _conc;
 		availability = _avail;
 		category = _category;
 		price = _price;
@@ -54,6 +58,7 @@ struct user {
 	}
 };
 user users[Size];
+user currentUser; //Temp to keep the current user's data
 
 struct order {
 	int userID;
@@ -96,10 +101,11 @@ bool validateUser(string username, string password, user& currentUser)
 	}
 	return false;
 }
+
 void logInInterface()
 {
 	bool loggedIn = false;
-	user currentUser; //Temp to keep the current user's data
+	
 	while (!loggedIn)
 	{
 
@@ -142,6 +148,7 @@ void logInInterface()
 				cout << "12- Request drug\n";
 				cout << "13- View all previous orders\n";
 			}
+			cin >> chosenOption;
 		}
 
 
@@ -339,6 +346,61 @@ void searchForMedicineByCategory() {
 		cout << "there is no medicine meet this category\n";
 	}
 }
+void ShowAllPreviousOrders() {
+	for (int i = 0; i < Size; i++) {   // checking for the current user ID to be able to get his/her orders using ID
+		if (currentUser.username == users[i].username) {
+			currentUser.ID == users[i].ID;
+			break;
+		}
+	}
+	cout << "Your previous orders: \n";
+	cout << "---------------------\n";
+	int num_order = 1;   // to display list of numbered orders
+	bool found_orders = false;  // to check if there were no orders regesitered for this user
+		for (int i = 0; i < Size; i++) {
+			if (orders[i].userID == currentUser.ID) {
+				found_orders = true;
+				cout << "Order number ("<< num_order <<") : \n";
+		        cout << "-------------------\n";
+				cout << "Date of order: " << orders[i].orderDate<<"\n";
+                cout <<"Ship date: "<< orders[i].shipDate<<"\n";
+
+				// printing out medicine id 
+
+				cout << "Medicine ID: ";
+				int j = 0;
+				int currentID = 0;
+
+				while (orders[i].medicine_ID[j]!= 0) {
+					currentID *= 10;
+					cout << orders[i].medicine_ID[j];
+					j++;
+					currentID += orders[i].medicine_ID[j];
+				}
+				cout<< "\n";
+
+				//getting medicine name from medicine ID
+				for (int i = 0; i < Size; i++) {
+					if (medicines[i].ID == currentID) {
+						cout << "Name of the medicine: " << medicines[i].name << "\n";
+						cout << "concentraion of the medicine" << medicines[i].concentration << "\n";
+						break;
+					}
+				}
+
+
+				cout << "Total price: " << orders[i].totalPrice << "\n";
+				num_order++;
+				
+			}
+		}
+		if (!found_orders) {
+			cout << "You have no previous orders \n";
+		}
+			cout << "------------------------------------------ \n ";
+		
+
+}
 
 void showOrderReceipt(order lastOrder) {
 	cout << "order date : " << lastOrder.orderDate << "\n";
@@ -355,16 +417,16 @@ void showOrderReceipt(order lastOrder) {
 void dataForTestPurposes() {
 
 	//*******************Medicine data****************************
-	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
-	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure", true, "Antihypertensive", 10.49, 50);
-	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", true, "Gastrointestinal", 7.25, 80);
-	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides", true, "Lipid-lowering agent", 15.75, 30);
-	medicines[4].initialize(5, "Metformin", "Treats type 2 diabetes", true, "Antidiabetic", 8.99, 60);
-	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections", true, "Antibiotic", 6.50, 0);
-	medicines[6].initialize(7, "Alprazolam", "Treats anxiety and panic disorders", true, "Anxiolytic", 12.99, 40);
-	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", true, "Analgesic", 4.75, 200);
-	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 0);
-	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", true, "Gastrointestinal", 6.99, 90);
+	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer","500 mg", true, "Analgesic", 5.99, 100);
+	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure","10 mg", true, "Antihypertensive", 10.49, 50);
+	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", "20 mg", true, "Gastrointestinal", 7.25, 80);
+	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides","20 mg", true, "Lipid-lowering agent", 15.75, 30);
+	medicines[4].initialize(5, "Metformin", "Treats type 2 diabetes", "500 mg", true, "Antidiabetic", 8.99, 60);
+	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections","250 mg", true, "Antibiotic", 6.50, 0);
+	medicines[6].initialize(7, "Alprazolam", "Treats anxiety and panic disorders","0.25 mg", true, "Anxiolytic", 12.99, 40);
+	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)","200 mg", true, "Analgesic", 4.75, 200);
+	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief","10 mg", true, "Antihistamine", 9.25, 0);
+	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers","150 mg", true, "Gastrointestinal", 6.99, 90);
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -498,5 +560,13 @@ int main()
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
+	if( currentUser.his_role == user::User) {
+		if(chosenOption==7)
+		ShowAllPreviousOrders();
+	}
+	else {
+		if(chosenOption==13)
+			ShowAllPreviousOrders();
+	}
 	
 }
