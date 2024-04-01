@@ -192,7 +192,7 @@ void saveOneUserDataLocally() {
 		file << users[user_data].password << '|';
 		file << users[user_data].address << '|';
 		file << users[user_data].phone << '|';
-		file <<users[user_data].his_role ;
+		file << users[user_data].his_role;
 		file << '\n';
 	}
 	file.close();
