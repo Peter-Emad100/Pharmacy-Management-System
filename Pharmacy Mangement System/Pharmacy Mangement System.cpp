@@ -77,13 +77,14 @@ struct order {
 };
 order orders[Size] ={};
 
-//********Function Declares***********//
+//********Functions Declaration***********//
 void dataForTestPurposes();
 bool isUsernameTaken(string username);
 void signUp();
 bool validateUser(string username, string password, user& currentUser);
 void userPermissions();
 void adminPermissions();
+void chooseOptions(user currentUser);
 void logInInterface();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
@@ -181,23 +182,27 @@ void userPermissions() {
 	cout << "5- View order\n";
 	cout << "6- Request drug\n";
 	cout << "7- View all previous orders\n";
-	cout << "8- Log out\n";
+	cout << "8- Edit information\n";
+	cout << "9- Log out\n";
 }
 
 void adminPermissions() {
-	cout << "1- Add new user\n";
-	cout << "2- Remove user\n";
-	cout << "3- Add new medicine\n";
-	cout << "4- Remove medicine\n";
-	cout << "5- Manage orders\n";
-	cout << "6- Manage payments\n";
-	cout << "7- Search for medicine by name\n";
-	cout << "8- Search for medicine by category\n";
-	cout << "9- Add order\n";
-	cout << "10- Choose payment method\n";
-	cout << "11- View order\n";
-	cout << "12- Request drug\n";
-	cout << "13- View all previous orders\n";
+	
+	cout << "1- Search for medicine by name\n";
+	cout << "2- Search for medicine by category\n";
+	cout << "3- Add order\n";
+	cout << "4- Choose payment method\n";
+	cout << "5- View order\n";
+	cout << "6- Request drug\n";
+	cout << "7- View all previous orders\n";
+	cout << "8- Edit information\n";
+	cout << "9- Add new user\n";
+	cout << "10- Remove user\n";
+	cout << "11- Add new medicine\n";
+	cout << "12- Remove medicine\n";
+	cout << "13- Manage orders\n";
+	cout << "14- Manage payments\n";
+	cout << "15- Log out\n";
 }
 
 void logInInterface()
@@ -217,18 +222,7 @@ void logInInterface()
 
 			loggedIn = true;
 			cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
-
-
-			if (currentUser.his_role == user::User)
-			{
-				userPermissions();
-			}
-			else
-			{
-				adminPermissions();
-				int decision;
-				cin >> decision;
-			}
+			chooseOptions(currentUser);
 			editUserCredentials(currentUser.ID - 1);
 		}
 
@@ -239,6 +233,17 @@ void logInInterface()
 
 		}
 	}
+}
+
+
+void chooseOptions(user currentUser)
+{
+	if (currentUser.his_role == user::User) {
+		userPermissions(); 
+	}
+	else {
+		adminPermissions(); 
+	}		
 }
 
 void editUserCredentials(int index)
@@ -475,7 +480,7 @@ int main()
 	//dataForTestPurposes();
 	//saveAllDataLocally();
 	saveAllDataToArr();
-	//signUp();
+	signUp();
 	logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
