@@ -149,6 +149,7 @@ void signUp() {
     
     cout << "Congratulations! Your account has been successfully created.\n";
 
+	user_data++;										 // Increment user_data to keep track of the total number of users
 
 	saveOneUserDataLocally();
 }
@@ -475,7 +476,7 @@ int main()
 	//dataForTestPurposes();
 	//saveAllDataLocally();
 	saveAllDataToArr();
-	//signUp();
+	signUp();
 	logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
