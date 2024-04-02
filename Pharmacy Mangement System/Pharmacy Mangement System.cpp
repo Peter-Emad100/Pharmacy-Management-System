@@ -81,7 +81,12 @@ struct order {
 };
 order orders[Size] = {};
 
-
+struct request {
+	int userID;
+	string medicineName;
+	int amountNeeded;
+};
+request requests[15];
 //**********Functions***********//
 bool validateUser(string username, string password, user& currentUser)
 {
@@ -301,6 +306,54 @@ void saveAllDataToArr() {
 	saveUserDataToArr();
 }
 
+int requestcounter = 0;
+void makeRequest(string _username, string _medicineName, int _amountReq)
+{
+	_username = currentUser.username;
+	int response;
+	cout << "Confirm the request? choose (1 for yes / 0 for no): " << endl;
+	cin >> response;
+	//no cases because it will be handeled in gui
+	requestcounter++;
+	if (response == 1) {
+		for (int i = 0;i < Size;i++)
+		{
+			if (_username == users[i].username)
+			{
+				currentUser.ID = users[i].ID;
+			}
+		}
+		for (int j = 0;j < 15;j++)
+		{
+			if (requests[j].userID == 0)
+			{
+				requests[j].userID = currentUser.ID;
+				requests[j].medicineName = _medicineName;
+				requests[j].amountNeeded = _amountReq;
+				break;
+			}
+		}
+	}
+}
+
+void SaveRequestsDataLocally()
+{
+	ofstream file;
+	file.open("RequestsData.txt", ios::app);
+	if (file.is_open())
+	{
+		file << "User ID" << " | " << "Medicine Name" << " | " << "Amount Requested\n";
+		for (int i = 0;i < requestcounter;i++)
+		{
+			file << requests[i].userID << "       |";
+			file << requests[i].medicineName << "      |";
+			file << requests[i].amountNeeded << "        \n";
+
+		}
+		file.close();
+	}
+}
+
 bool searchForMedicineByName() {
 	string name;
 	cout << "Enter the medicine name\n";
@@ -328,7 +381,12 @@ bool searchForMedicineByName() {
 		return 1;
 	}
 	else {
-		return 0;
+		int amountrequested;
+		cout << "Enter the amount you need:\n";
+		cin >> amountrequested;
+		makeRequest(currentUser.username, name, amountrequested);
+		SaveRequestsDataLocally();
+
 	}
 }
 
@@ -344,8 +402,23 @@ void searchForMedicineByCategory() {
 	}
 	if (found == false) {
 		cout << "there is no medicine meet this category\n";
+		int ifwant;
+		string medicineName;
+		int amountrequested;
+		cout << "Want to make a request?choose(any number for yes/ 0 for no)" << endl;
+		cin >> ifwant;
+		if (ifwant != 0)
+		{
+			cout << "Enter medicine name:\n";
+			cin >> medicineName;
+			cout << "Enter the amount you need:\n";
+			cin >> amountrequested;
+			makeRequest(currentUser.username, medicineName, amountrequested);
+			SaveRequestsDataLocally();
+		}
 	}
 }
+
 void ShowAllPreviousOrders() {
 	for (int i = 0; i < Size; i++) {   // checking for the current user ID to be able to get his/her orders using ID
 		if (currentUser.username == users[i].username) {
@@ -603,13 +676,38 @@ int main()
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
-	if( currentUser.his_role == user::User) {
-		if(chosenOption==7)
-		ShowAllPreviousOrders();
+	if (currentUser.his_role == user::User) {
+		if (chosenOption == 7)
+			ShowAllPreviousOrders();
+		else if (chosenOption == 6)
+		{
+			string medicineName;
+			int amountrequested;
+			bool found = false;
+			cout << "Enter medicine name:\n";
+			cin >> medicineName;
+			cout << "Enter the amount you need:\n";
+			cin >> amountrequested;
+			makeRequest(currentUser.username, medicineName, amountrequested);
+		}
 	}
 	else {
-		if(chosenOption==13)
+		if (chosenOption == 13)
 			ShowAllPreviousOrders();
+		else if (chosenOption == 12)
+		{
+			string medicineName;
+			int amountrequested;
+			cout << "Enter medicine name:\n";
+			cin >> medicineName;
+			cout << "Enter the amount you need:\n";
+			cin >> amountrequested;
+			makeRequest(currentUser.username, medicineName, amountrequested);
+
+
+		}
 	}
-	
+		
+		
+	SaveRequestsDataLocally();
 }
