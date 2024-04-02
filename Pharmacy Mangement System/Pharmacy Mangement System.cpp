@@ -12,7 +12,7 @@ using namespace std;
 
 const int Size = 100;
 const int medicine_data = 10;
-const int user_data = 7;
+int user_data = 7;
 
 int chosenOption; // variable to choose with which order you want to go through after log in
 
@@ -413,7 +413,50 @@ void showOrderReceipt(order lastOrder) {
 	cout << "total price : " << lastOrder.totalPrice << "\n";
 	cout << "ship date : " << lastOrder.shipDate << "\n";
 }
+void appendingNewUser();
+void UsersSignUp()
+{
+	user tempUser;
+	int role;
+	cout << "Username     : "; cin >> tempUser.username;
+	cout << "Email address: "; cin >> tempUser.email;
+	cout << "Phone number : "; cin >> tempUser.phone;
+	cout << "Password     : "; cin >> tempUser.password;
+	cout << "Address      : "; cin >> tempUser.address;
+	cout << "Role         : "; cin >> role;
 
+	if (role)
+	{
+		tempUser.his_role = user::Admin;
+	}
+	else if (role == 0)
+	{
+		tempUser.his_role = user::User;
+	}
+
+	user_data++;
+	tempUser.ID = (user_data + 1);
+	users[user_data] = tempUser;
+	appendingNewUser();
+
+}
+void appendingNewUser()
+{
+	fstream file;
+	file.open("UserData.csv", ios::app);
+	if (file.is_open())
+	{
+		file << users[user_data].username << "|";
+		file << users[user_data].ID << "|";
+		file << users[user_data].email << "|";
+		file << users[user_data].password << "|";
+		file << users[user_data].address << "|";
+		file << users[user_data].phone << "|";
+		file << users[user_data].his_role;
+		file << "\n";
+	}
+	file.close();
+}
 void dataForTestPurposes() {
 
 	//*******************Medicine data****************************
