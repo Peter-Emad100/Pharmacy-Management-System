@@ -13,14 +13,16 @@ struct medicine {
 	int ID;
 	string name;
 	string description;
+	string concentration;
 	bool availability;
 	string category;
 	float price;
 	int quantity_in_stock;
-	void initialize(int _id, string _name, string _desc, bool _avail, string _category, float _price, int _quantity) {
+	void initialize(int _id, string _name, string _desc, string _conc, bool _avail, string _category, float _price, int _quantity) {
 		ID = _id;
 		name = _name;
 		description = _desc;
+		concentration = _conc;
 		availability = _avail;
 		category = _category;
 		price = _price;
@@ -56,13 +58,14 @@ void saveMedicineDataLocally() {
 	if (file.is_open())
 	{
 		file << "sep=|\n";
-		file << "Name" << '|' << "Category" << '|' << "Description" << '|' << "ID" << '|' << "Quantity in stock" << '|' << "Availabilty" << '|' << "Price\n";
+		file << "ID" << '|' << "Name" << '|' << "Category" << '|' << "Description" << '|' << "Concentration" << '|' << "Quantity in stock" << '|' << "Availabilty" << '|' << "Price\n";
 		for (int i = 0; i < 10; i++)
 		{
+			file << medicines[i].ID << '|';
 			file << medicines[i].name << '|';
 			file << medicines[i].category << '|';
 			file << medicines[i].description << '|';
-			file << medicines[i].ID << '|';
+			file << medicines[i].concentration << '|';
 			file << medicines[i].quantity_in_stock << '|';
 
 			file << medicines[i].availability << '|';
@@ -110,6 +113,9 @@ void saveMedicineDataToArr() {
 		getline(file, data);                  //Skips a data
 		for (int i = 0; getline(file, data, '|'); i++)
 		{
+			medicines[i].ID = stoi(data);
+			//cout << medicines[i].ID << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
 			medicines[i].name = data;
 			//cout << medicines[i].name << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
@@ -119,8 +125,8 @@ void saveMedicineDataToArr() {
 			medicines[i].description = data;
 			//cout << medicines[i].description << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
-			medicines[i].ID = stoi(data);
-			//cout << medicines[i].ID << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			medicines[i].concentration = data;
+			//cout << medicines[i].concentration << '\n';         //Testing the outcomes. Best to keep here, so don't delete//
 			getline(file, data, '|');
 			/*if (medicines[i].quantity_in_stock <= 1)
 			{

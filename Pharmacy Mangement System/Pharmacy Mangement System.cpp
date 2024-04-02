@@ -15,18 +15,22 @@ const int Size = 100;
 int medicine_data = 0;
 int user_data = 0;
 
+int chosenOption; // variable to choose with which order you want to go through after log in
+
 struct medicine {
 	int ID;
 	string name;
 	string description;
+	string concentration;
 	bool availability;
 	string category;
 	float price;
 	int quantity_in_stock;
-	void initialize(int _id, string _name, string _desc, bool _avail, string _category, float _price, int _quantity) {
+	void initialize(int _id, string _name, string _desc, string _conc, bool _avail, string _category, float _price, int _quantity) {
 		ID = _id;
 		name = _name;
 		description = _desc;
+		concentration = _conc;
 		availability = _avail;
 		category = _category;
 		price = _price;
@@ -55,6 +59,7 @@ struct user {
 	}
 };
 user users[Size];
+user currentUser; //Temp to keep the current user's data
 
 struct order {
 	int userID;
@@ -82,18 +87,52 @@ void dataForTestPurposes();
 bool isUsernameTaken(string username);
 void signUp();
 bool validateUser(string username, string password, user& currentUser);
+void logInInterface();
 void userPermissions();
 void adminPermissions();
-void logInInterface();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
+void searchForMedicineByCategory();
 void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]);
 void showOrderReceipt(order lastOrder);
+void ShowAllPreviousOrders();
 void logOut();
 
 //**********Functions***********//
 
+void dataForTestPurposes() {
 
+	//*******************Medicine data****************************
+	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", "500 mg", true, "Analgesic", 5.99, 100);
+	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure", "10 mg", true, "Antihypertensive", 10.49, 50);
+	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", "20 mg", true, "Gastrointestinal", 7.25, 80);
+	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides", "20 mg", true, "Lipid-lowering agent", 15.75, 30);
+	medicines[4].initialize(5, "Metformin", "Treats type 2 diabetes", "500 mg", true, "Antidiabetic", 8.99, 60);
+	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections", "250 mg", true, "Antibiotic", 6.50, 0);
+	medicines[6].initialize(7, "Alprazolam", "Treats anxiety and panic disorders", "0.25 mg", true, "Anxiolytic", 12.99, 40);
+	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", "200 mg", true, "Analgesic", 4.75, 200);
+	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", "10 mg", true, "Antihistamine", 9.25, 0);
+	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", "150 mg", true, "Gastrointestinal", 6.99, 90);
+
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	//*******************User data****************************
+	users[0].initialize(1, "Naruto", "NotNaruto", "narutouzumaki@example.com", "123 Main St, Cityville", "+1234567890", user::User);
+	users[1].initialize(2, "Madara", "password2", "nadarauchiha@example.com", "456 Elm St, Townsville", "+1987654321", user::User);
+	users[2].initialize(3, "Cillian", "Cillianpass", "callianmurphy@example.com", "789 Oak St, Villageton", "+1122334455", user::Admin);
+	users[3].initialize(4, "Aras", "passBulut", "arasbulut@example.com", "987 Pine St, Hamletville", "+9988776655", user::User);
+	users[4].initialize(5, "Sung", "jinwoo", "sungjinwoo@example.com", "654 Birch St, Countryside", "+1122334455", user::User);
+	users[5].initialize(6, "Iman", "imangadzhi", "imangadzhi@example.com", "321 Maple St, Suburbia", "+9988776655", user::User);
+	users[6].initialize(7, "Ali", "AliAli", "alimuhammadali.smith@example.com", "111 Cedar St, Ruralville", "+1122334455", user::Admin);
+
+	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+	int medicine1[] = { 1, 2, 3, 0 };
+	orders[0].initialize(1, "2024-03-27", medicine1, 500.0, "2024-03-27");
+	int medicine2[] = { 4, 5, 0 };
+	orders[1].initialize(2, "2024-03-28", medicine2, 300.0, "2024-03-28");
+	int medicine3[] = { 9, 4,5,7 ,0 };
+	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29");
+}
 
 bool isUsernameTaken(string username) {
 	int i = 0;
@@ -169,9 +208,48 @@ bool validateUser(string username, string password, user& currentUser)
 			return true;
 		}
 		userIndex++;
-
+    
 	}
 	return false;
+}
+
+void logInInterface()
+{
+	bool loggedIn = false;
+
+	while (!loggedIn)
+	{
+
+
+		cout << "Enter your username: ";
+		cin >> currentUser.username;
+		cout << "Enter your password: ";
+		cin >> currentUser.password;
+
+		if (validateUser(currentUser.username, currentUser.password, currentUser)) {
+
+			loggedIn = true;
+			cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
+
+
+			if (currentUser.his_role == user::User)
+			{
+				userPermissions();
+			}
+			else
+			{
+				adminPermissions();
+			}
+			cin >> chosenOption;
+		}
+
+
+		else
+		{
+			cout << "Invalid credentials. The username or password you entered is incorrect. Please try again.\n";
+
+		}
+	}
 }
 
 void userPermissions() {
@@ -201,47 +279,6 @@ void adminPermissions() {
 	cout << "13- View all previous orders\n";
 }
 
-void logInInterface()
-{
-	bool loggedIn = false;
-	user currentUser; //Temp to keep the current user's data
-	while (!loggedIn)
-	{
-
-
-		cout << "Enter your username: ";
-		cin >> currentUser.username;
-		cout << "Enter your password: ";
-		cin >> currentUser.password;
-
-		if (validateUser(currentUser.username, currentUser.password, currentUser)) {
-
-			loggedIn = true;
-			cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
-
-
-			if (currentUser.his_role == user::User)
-			{
-				userPermissions();
-			}
-			else
-			{
-				adminPermissions();
-				int decision;
-				cin >> decision;
-			}
-			editUserCredentials(currentUser.ID - 1);
-		}
-
-
-		else
-		{
-			cout << "Invalid credentials. The username or password you entered is incorrect. Please try again.\n";
-
-		}
-	}
-}
-
 void editUserCredentials(int index)
 {
 	cout << "What are you willing to change ?\n";
@@ -269,11 +306,6 @@ void editUserCredentials(int index)
 	saveUserDataLocally();
 
 
-}
-
-void logOut()
-{
-	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
 }
 
 bool searchForMedicineByName() {
@@ -322,50 +354,29 @@ void searchForMedicineByCategory() {
 	}
 }
 
-void showOrderReceipt(order lastOrder) {
-	cout << "order date : " << lastOrder.orderDate << '\n';
-	int i = 0;
-	while (lastOrder.medicine_ID[i] != 0) {
-		cout << "medicine id : " << lastOrder.medicine_ID[i] << '\n';
-		i++;
-	}
-	cout << "user id : " << lastOrder.userID << '\n';
-	cout << "total price : " << lastOrder.totalPrice << '\n';
-	cout << "ship date : " << lastOrder.shipDate << '\n';
+// Convert date string to integers
+void parseDateString(const std::string& dateString, int& year, int& month, int& day) {
+	std::stringstream ss(dateString);
+	char dash;
+	ss >> year >> dash >> month >> dash >> day;
 }
 
-void dataForTestPurposes() {
+// calculate the difference in days between two dates
+int dateDifference(const std::string& date1, const std::string& date2) {
+	int year1, month1, day1;
+	int year2, month2, day2;
 
-	//*******************Medicine data****************************
-	medicines[0].initialize(1, "Paracetamol", "Pain reliever and fever reducer", true, "Analgesic", 5.99, 100);
-	medicines[1].initialize(2, "Lisinopril", "Used to treat high blood pressure", true, "Antihypertensive", 10.49, 50);
-	medicines[2].initialize(3, "Omeprazole", "Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)", true, "Gastrointestinal", 7.25, 80);
-	medicines[3].initialize(4, "Atorvastatin", "Lowers high cholesterol and triglycerides", true, "Lipid-lowering agent", 15.75, 30);
-	medicines[4].initialize(5, "Metformin", "Treats type 2 diabetes", true, "Antidiabetic", 8.99, 60);
-	medicines[5].initialize(6, "Amoxicillin", "Antibiotic used to treat bacterial infections", true, "Antibiotic", 6.50, 0);
-	medicines[6].initialize(7, "Alprazolam", "Treats anxiety and panic disorders", true, "Anxiolytic", 12.99, 40);
-	medicines[7].initialize(8, "Ibuprofen", "Nonsteroidal anti-inflammatory drug (NSAID)", true, "Analgesic", 4.75, 200);
-	medicines[8].initialize(9, "Cetirizine", "Antihistamine used for allergy relief", true, "Antihistamine", 9.25, 0);
-	medicines[9].initialize(10, "Ranitidine", "Reduces stomach acid production to treat heartburn and ulcers", true, "Gastrointestinal", 6.99, 90);
+	parseDateString(date1, year1, month1, day1);
+	parseDateString(date2, year2, month2, day2);
 
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Calculate the total number of days for each date
+	int days1 = year1 * 365 + month1 * 30 + day1;
+	int days2 = year2 * 365 + month2 * 30 + day2;
 
-	//*******************User data****************************
-	users[0].initialize(1, "Naruto", "NotNaruto", "narutouzumaki@example.com", "123 Main St, Cityville", "+1234567890", user::User);
-	users[1].initialize(2, "Madara", "password2", "nadarauchiha@example.com", "456 Elm St, Townsville", "+1987654321", user::User);
-	users[2].initialize(3, "Cillian", "Cillianpass", "callianmurphy@example.com", "789 Oak St, Villageton", "+1122334455", user::Admin);
-	users[3].initialize(4, "Aras", "passBulut", "arasbulut@example.com", "987 Pine St, Hamletville", "+9988776655", user::User);
-	users[4].initialize(5, "Sung", "jinwoo", "sungjinwoo@example.com", "654 Birch St, Countryside", "+1122334455", user::User);
-	users[5].initialize(6, "Iman", "imangadzhi", "imangadzhi@example.com", "321 Maple St, Suburbia", "+9988776655", user::User);
-	users[6].initialize(7, "Ali", "AliAli", "alimuhammadali.smith@example.com", "111 Cedar St, Ruralville", "+1122334455", user::Admin);
+	// Calculate the difference in days
+	int difference = days2 - days1;
 
-	//--------------------------------------------------------------------------------------------------------------------------------------------------------
-	int medicine1[] = { 1, 2, 3, 0 };
-	orders[0].initialize(1, "2024-03-27", medicine1, 500.0, "2024-03-27");
-	int medicine2[] = { 4, 5, 0 };
-	orders[1].initialize(2, "2024-03-28", medicine2, 300.0, "2024-03-28");
-	int medicine3[] = { 9, 4,5,7 ,0 };
-	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29");
+	return difference;
 }
 
 void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]) {
@@ -436,7 +447,6 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 			break;
 		}
 	}
-
 	cout << "ordertime : " << orderTime << '\n';
 
 	//create an order
@@ -446,29 +456,78 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 
 }
 
-// Convert date string to integers
-void parseDateString(const std::string& dateString, int& year, int& month, int& day) {
-	std::stringstream ss(dateString);
-	char dash;
-	ss >> year >> dash >> month >> dash >> day;
+void showOrderReceipt(order lastOrder) {
+	cout << "order date : " << lastOrder.orderDate << '\n';
+	int i = 0;
+	while (lastOrder.medicine_ID[i] != 0) {
+		cout << "medicine id : " << lastOrder.medicine_ID[i] << '\n';
+		i++;
+	}
+	cout << "user id : " << lastOrder.userID << '\n';
+	cout << "total price : " << lastOrder.totalPrice << '\n';
+	cout << "ship date : " << lastOrder.shipDate << '\n';
 }
 
-// calculate the difference in days between two dates
-int dateDifference(const std::string& date1, const std::string& date2) {
-	int year1, month1, day1;
-	int year2, month2, day2;
+void ShowAllPreviousOrders() {
+	for (int i = 0; i < Size; i++) {   // checking for the current user ID to be able to get his/her orders using ID
+		if (currentUser.username == users[i].username) {
+			currentUser.ID == users[i].ID;
+			break;
+		}
+	}
 
-	parseDateString(date1, year1, month1, day1);
-	parseDateString(date2, year2, month2, day2);
+	cout << "Your previous orders: \n";
+	cout << "---------------------\n";
+	int num_order = 1;   // to display list of numbered orders
+	bool found_orders = false;  // to check if there were no orders regesitered for this user
+	for (int i = 0; i < Size; i++) {
+		if (orders[i].userID == currentUser.ID) {
+			found_orders = true;
+			cout << "Order number (" << num_order << ") : \n";
+			cout << "-------------------\n";
+			cout << "Date of order: " << orders[i].orderDate << "\n";
+			cout << "Ship date: " << orders[i].shipDate << "\n";
 
-	// Calculate the total number of days for each date
-	int days1 = year1 * 365 + month1 * 30 + day1;
-	int days2 = year2 * 365 + month2 * 30 + day2;
+			// printing out medicine id 
 
-	// Calculate the difference in days
-	int difference = days2 - days1;
+			cout << "Medicine ID: ";
+			int j = 0;
+			int currentID = 0;
 
-	return difference;
+			while (orders[i].medicine_ID[j] != 0) {
+				currentID *= 10;
+				cout << orders[i].medicine_ID[j];
+				j++;
+				currentID += orders[i].medicine_ID[j];
+			}
+			cout << "\n";
+
+			//getting medicine name from medicine ID
+			for (int i = 0; i < Size; i++) {
+				if (medicines[i].ID == currentID) {
+					cout << "Name of the medicine: " << medicines[i].name << "\n";
+					cout << "concentraion of the medicine" << medicines[i].concentration << "\n";
+					break;
+				}
+			}
+
+
+			cout << "Total price: " << orders[i].totalPrice << "\n";
+			num_order++;
+
+		}
+	}
+	if (!found_orders) {
+		cout << "You have no previous orders \n";
+	}
+	cout << "------------------------------------------ \n ";
+
+
+}
+
+void logOut()
+{
+	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
 }
 
 int main()
@@ -476,10 +535,18 @@ int main()
 	//dataForTestPurposes();
 	//saveAllDataLocally();
 	saveAllDataToArr();
-	signUp();
-	logInInterface();
+	//signUp();
+	//logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
-
+	if( currentUser.his_role == user::User) {
+		if(chosenOption==7)
+		ShowAllPreviousOrders();
+	}
+	else {
+		if(chosenOption==13)
+			ShowAllPreviousOrders();
+	}
+	
 }
