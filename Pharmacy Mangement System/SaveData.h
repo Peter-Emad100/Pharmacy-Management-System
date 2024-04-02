@@ -1,6 +1,7 @@
 #pragma once
 void saveMedicineDataLocally();
 void saveUserDataLocally();
+void saveRequestsDataLocally();
 void saveAllDataLocally();
 void saveMedicineDataToArr();
 void saveUserDataToArr();

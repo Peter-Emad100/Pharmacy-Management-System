@@ -98,9 +98,28 @@ void saveUserDataLocally() {
 	}
 }
 
+void saveRequestsDataLocally()
+{
+	ofstream file;
+	file.open("RequestsData.txt", ios::app);
+	if (file.is_open())
+	{
+		file << "User ID" << " | " << "Medicine Name" << " | " << "Amount Requested\n";
+		for (int i = 0; i < requestcounter; i++)
+		{
+			file << requests[i].userID << "       |";
+			file << requests[i].medicineName << "      |";
+			file << requests[i].amountNeeded << "        \n";
+
+		}
+		file.close();
+	}
+}
+
 void saveAllDataLocally() {
 	saveMedicineDataLocally();
 	saveUserDataLocally();
+	saveRequestsDataLocally();
 }
 
 void saveMedicineDataToArr() {
