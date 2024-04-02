@@ -103,7 +103,7 @@ void searchForMedicineByCategory();
 void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]);
 void showOrderReceipt(order lastOrder);
 void makeRequest(string _username, string _medicineName, int _amountReq);
-void ShowAllPreviousOrders();
+void showAllPreviousOrders();
 void logOut();
 
 //**********Functions***********//
@@ -248,6 +248,7 @@ void logInInterface()
 			{
 				adminPermissions();
 			}
+			//editUserCredentials(currentUser.ID-1);
 			cin >> chosenOption;
 		}
 
@@ -590,14 +591,14 @@ int main()
 	//dataForTestPurposes();
 	//saveAllDataLocally();
 	saveAllDataToArr();
-	//signUp();
-	//logInInterface();
+	signUp();
+	logInInterface();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
 	if (currentUser.his_role == user::User) {
 		if (chosenOption == 7)
-			ShowAllPreviousOrders();
+			showAllPreviousOrders();
 		else if (chosenOption == 6)
 		{
 			string medicineName;
@@ -612,7 +613,7 @@ int main()
 	}
 	else {
 		if (chosenOption == 13)
-			ShowAllPreviousOrders();
+			showAllPreviousOrders();
 		else if (chosenOption == 12)
 		{
 			string medicineName;

@@ -8,6 +8,7 @@ using namespace std;
 extern const int Size = 100;
 extern int medicine_data;
 extern int user_data;
+extern int requestcounter;
 
 struct medicine {
 	int ID;
@@ -51,6 +52,13 @@ struct user {
 	}
 };
 extern user users[Size];
+
+struct request {
+	int userID;
+	string medicineName;
+	int amountNeeded;
+};
+extern request requests[15];
 
 void saveMedicineDataLocally() {
 	fstream file;
