@@ -148,10 +148,10 @@ void signUp() {
 	users[id - 1] = newUser; // Save the new user data into our users array
 
 	cout << "Congratulations! Your account has been successfully created.\n";
-
-	user_data++;										 // Increment user_data to keep track of the total number of users
-
+	
 	saveOneUserDataLocally();
+	
+	user_data++;										 // Increment user_data to keep track of the total number of users
 }
 
 bool validateUser(string username, string password, user& currentUser)
