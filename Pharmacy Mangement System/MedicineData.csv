@@ -1,12 +1,12 @@
 sep=|
-Name|Category|Description|ID|Quantity in stock|Availabilty|Price
-Paracetamol|Analgesic|Pain reliever and fever reducer|1|100|1|5.99
-Lisinopril|Antihypertensive|Used to treat high blood pressure|2|50|1|10.49
-Omeprazole|Gastrointestinal|Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)|3|80|1|7.25
-Atorvastatin|Lipid-lowering agent|Lowers high cholesterol and triglycerides|4|30|1|15.75
-Metformin|Antidiabetic|Treats type 2 diabetes|5|60|1|8.99
-Amoxicillin|Antibiotic|Antibiotic used to treat bacterial infections|6|0|1|6.5
-Alprazolam|Anxiolytic|Treats anxiety and panic disorders|7|40|1|12.99
-Ibuprofen|Analgesic|Nonsteroidal anti-inflammatory drug (NSAID)|8|200|1|4.75
-Cetirizine|Antihistamine|Antihistamine used for allergy relief|9|0|1|9.25
-Ranitidine|Gastrointestinal|Reduces stomach acid production to treat heartburn and ulcers|10|90|1|6.99
+ID|Name|Category|Description|Concentration|Quantity in stock|Availabilty|Price
+1|Paracetamol|Analgesic|Pain reliever and fever reducer|500 mg|100|1|5.99
+2|Lisinopril|Antihypertensive|Used to treat high blood pressure|10 mg|50|1|10.49
+3|Omeprazole|Gastrointestinal|Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)|20 mg|80|1|7.25
+4|Atorvastatin|Lipid-lowering agent|Lowers high cholesterol and triglycerides|20 mg|30|1|15.75
+5|Metformin|Antidiabetic|Treats type 2 diabetes|500 mg|60|1|8.99
+6|Amoxicillin|Antibiotic|Antibiotic used to treat bacterial infections|250 mg|0|1|6.5
+7|Alprazolam|Anxiolytic|Treats anxiety and panic disorders|0.25 mg|40|1|12.99
+8|Ibuprofen|Analgesic|Nonsteroidal anti-inflammatory drug (NSAID)|200 mg|200|1|4.75
+9|Cetirizine|Antihistamine|Antihistamine used for allergy relief|10 mg|0|1|9.25
+10|Ranitidine|Gastrointestinal|Reduces stomach acid production to treat heartburn and ulcers|150 mg|90|1|6.99
