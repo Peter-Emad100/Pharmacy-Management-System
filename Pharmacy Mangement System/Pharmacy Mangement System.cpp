@@ -348,7 +348,6 @@ bool searchForMedicineByName() {
 		cout << "Enter the amount you need:\n";
 		cin >> amountrequested;
 		makeRequest(currentUser.username, name, amountrequested);
-		saveRequestsDataLocally();
 	}
 }
 
@@ -376,7 +375,6 @@ void searchForMedicineByCategory() {
 			cout << "Enter the amount you need:\n";
 			cin >> amountrequested;
 			makeRequest(currentUser.username, medicineName, amountrequested);
-			saveRequestsDataLocally();
 		}
 	}
 }
