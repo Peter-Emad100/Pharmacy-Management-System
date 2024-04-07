@@ -1,0 +1,6 @@
+visa
+COD
+pick at pharmacy
+debit
+credit cards
+paypal
