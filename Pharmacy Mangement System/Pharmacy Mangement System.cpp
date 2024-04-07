@@ -59,6 +59,7 @@ struct user {
 	}
 };
 user users[Size];
+user newUser;
 user currentUser; //Temp to keep the current user's data
 
 struct order {
@@ -104,6 +105,10 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 void showOrderReceipt(order lastOrder);
 void makeRequest(string _username, string _medicineName, int _amountReq);
 void showAllPreviousOrders();
+void manageUsersOptions();
+void addUser();
+void updateUser();
+void viewAllUsers();
 void logOut();
 
 //**********Functions***********//
@@ -154,18 +159,20 @@ bool isUsernameTaken(string username) {
 }
 
 void signUp() {
-	user newUser;
+	
 	int id = user_data + 1; // Next available ID
 
 	newUser.ID = id;
 
-	cout << "Enter your username: ";
-	cin >> newUser.username;
-	while (isUsernameTaken(newUser.username))  //Checks if username is already taken in our database or no.
-	{
-		cout << "A user with that username already exists. Please enter a different username: ";
+	do {
+		cout << "Enter your username: ";
 		cin >> newUser.username;
-	}
+
+		if (isUsernameTaken(newUser.username))
+			cout << "A user with that username already exists. Please enter a different username: ";
+
+
+	} while (isUsernameTaken(newUser.username)); //Checks if username is already taken in our database or no.
 
 	cout << "Enter your password: ";
 	cin >> newUser.password;
@@ -274,18 +281,19 @@ void userPermissions() {
 
 void adminPermissions() {
 	cout << "1- Add new user\n";
-	cout << "2- Remove user\n";
-	cout << "3- Add new medicine\n";
-	cout << "4- Remove medicine\n";
-	cout << "5- Manage orders\n";
-	cout << "6- Manage payments\n";
-	cout << "7- Search for medicine by name\n";
-	cout << "8- Search for medicine by category\n";
-	cout << "9- Add order\n";
-	cout << "10- Choose payment method\n";
-	cout << "11- View order\n";
-	cout << "12- Request drug\n";
-	cout << "13- View all previous orders\n";
+	cout << "2- Update user information\n";
+	cout << "3- Remove user\n";
+	cout << "4- Add new medicine\n";
+	cout << "5- Remove medicine\n";
+	cout << "6- Manage orders\n";
+	cout << "7- Manage payments\n";
+	cout << "8- Search for medicine by name\n";
+	cout << "9- Search for medicine by category\n";
+	cout << "10- Add order\n";
+	cout << "11- Choose payment method\n";
+	cout << "12- View order\n";
+	cout << "13- Request drug\n";
+	cout << "14- View all previous orders\n";
 }
 
 void editUserCredentials(int index)
@@ -579,6 +587,177 @@ void showAllPreviousOrders() {
 
 }
 
+void addUser()
+{
+	int id = user_data + 1;
+	newUser.ID = id;
+
+	cout << "Please provide the following information for the new user:\n";
+	do {
+		cout << "Username: ";
+		cin >> newUser.username;
+
+		if (isUsernameTaken(newUser.username))
+			cout << "A user with that username already exists. Please enter a different username: ";
+
+
+	} while (isUsernameTaken(newUser.username)); 
+
+
+	cout << "Password: ";
+	cin >> newUser.password;
+	cout << "E-mail: ";
+	cin >> newUser.email;
+	cout << "Address: ";
+	cin.ignore(1, '\n');
+	getline(cin, newUser.address);
+	cout << "Phone Number: ";
+	cin >> newUser.phone;
+
+	int roleChoice;
+
+	do {
+		cout << "Pick the new role\n1-User\n2-Admin\n";
+		cin >> roleChoice;
+		if (roleChoice == 1) {
+			newUser.his_role = user::User;
+		}
+		else if (roleChoice == 2) {
+			newUser.his_role = user::Admin;
+		}
+		else {
+			cout << "Invalid role choice. Please enter 1 for User or 2 for Admin.\n";
+		}
+	} while (roleChoice != 1 && roleChoice != 2);
+
+	users[id - 1] = newUser;
+
+	cout << "Congratulations! A new user has been successfully created.\n";
+
+	saveOneUserDataLocally();
+
+	user_data++;										 // Increment user_data to keep track of the total number of users
+
+}
+
+
+void updateUser() {
+	int userID;
+	bool userFound = false;
+	int index = -1;
+
+	while (!userFound) {
+		cout << "Enter the ID of the user you are willing to update: ";
+		cin >> userID;
+
+		for (int i = 0; i < user_data; ++i) {
+			if (users[i].ID == userID) {
+				userFound = true;
+				index = i;
+				break;
+			}
+		}
+
+		if (!userFound) {
+			cout << "User not found. Please enter a valid ID.\n";
+		}
+	}
+
+
+	cout << "---------------------------------\n";
+	cout << "Current username: " << users[index].username << "\n";
+	cout << "Current password: " << users[index].password << "\n";
+	cout << "Current email: " << users[index].email << "\n";
+	cout << "Current address: " << users[index].address << "\n";
+	cout << "Current phone number: " << users[index].phone << "\n";
+
+
+	if (users[index].his_role == user::User) 
+		cout << "Current role: User\n";
+	else if (users[index].his_role == user::Admin) 
+		cout << "Current role: Admin\n";
+	
+	
+
+	char choice;
+	int roleChoice;
+	do {
+		cout << "What do you want to edit?\n";
+		cout << "1. Username\n";
+		cout << "2. Password\n";
+		cout << "3. Email\n";
+		cout << "4. Address\n";
+		cout << "5. Phone Number\n";
+		cout << "6. Role\n\n";
+		cout << "Enter your choice: ";
+
+		int option;
+		cin >> option;
+
+		switch (option) {
+		case 1:
+
+			do {
+				cout << "Enter new username: ";
+				cin >> users[index].username;
+
+				if (isUsernameTaken(users[index].username)) {
+					cout << "Username already exists. Please choose a different username.\n";
+				}
+			} while (isUsernameTaken(users[index].username));
+
+			break;
+		case 2:
+			cout << "Enter new password: ";
+			cin >> users[index].password;
+			break;
+		case 3:
+			cout << "Enter new email: ";
+			cin >> users[index].email;
+			break;
+		case 4:
+			cout << "Enter new address: ";
+			cin.ignore(1, '\n');
+			getline(cin, users[index].address);
+			break;
+		case 5:
+			cout << "Enter new phone number: ";
+			cin >> users[index].phone;
+			break;
+		case 6:
+
+			do {
+				cout << "Enter new role\n1-User\n2-Admin\n";
+
+				cin >> roleChoice;
+				if (roleChoice == 1) {
+					users[index].his_role = user::User;
+				}
+				else if (roleChoice == 2) {
+					users[index].his_role = user::Admin;
+				}
+				else {
+					cout << "Invalid role choice. Please enter 1 for User or 2 for Admin.\n";
+				}
+			} while (roleChoice != 1 && roleChoice != 2);
+			break;
+
+		default:
+			cout << "Invalid option!\n";
+		}
+
+		cout << "Would you like to make any additional edits? Choose between y/n : ";
+		cin >> choice;
+
+	} while (choice == 'y' || choice == 'Y');
+
+	cout << "User updated successfully!\n";
+
+	saveUserDataLocally();
+}
+
+
+
 void logOut()
 {
 	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
@@ -589,15 +768,16 @@ int main()
 	//dataForTestPurposes();
 	//saveAllDataLocally();
 	saveAllDataToArr();
-	signUp();
-	logInInterface();
+	//signUp();
+	//logInInterface();
+	
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
 	if (currentUser.his_role == user::User) {
-		if (chosenOption == 7)
+		if (chosenOption == 8)
 			showAllPreviousOrders();
-		else if (chosenOption == 6)
+		else if (chosenOption == 7)
 		{
 			string medicineName;
 			int amountrequested;
@@ -608,11 +788,12 @@ int main()
 			cin >> amountrequested;
 			makeRequest(currentUser.username, medicineName, amountrequested);
 		}
+		
 	}
 	else {
-		if (chosenOption == 13)
+		if (chosenOption == 14)
 			showAllPreviousOrders();
-		else if (chosenOption == 12)
+		else if (chosenOption == 13)
 		{
 			string medicineName;
 			int amountrequested;
@@ -623,6 +804,11 @@ int main()
 			makeRequest(currentUser.username, medicineName, amountrequested);
 			saveRequestsDataLocally();
 		}
+		else if (chosenOption == 1)
+			addUser();
+		else if (chosenOption == 2)
+			updateUser();
 	}
+
 	
 }
