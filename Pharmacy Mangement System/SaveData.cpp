@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include "SaveData.h"
 
@@ -9,6 +10,8 @@ extern const int Size = 100;
 extern int medicine_data;
 extern int user_data;
 extern int requestcounter;
+vector<string> paymentMethods;
+
 
 struct medicine {
 	int ID;
@@ -84,6 +87,41 @@ void saveMedicineDataLocally() {
 	}
 }
 
+void savePayMethodeToVec()
+{
+	fstream file;
+	file.open("payMethode.txt", ios::in);
+	if (file.is_open())
+	{
+		string line;
+		while (!file.eof())
+		{
+			getline(file, line);
+			paymentMethods.push_back(line);
+		}
+		file.close();
+	}
+}
+void savePayMethodeLocally()
+{
+	fstream file;
+	file.open("payMethode.txt", ios::out);
+	if (file.is_open())
+	{
+		for (auto it = paymentMethods.begin(); it != paymentMethods.end(); ++it)
+		{
+			if (paymentMethods.back() == *it)
+			{
+				file << *it;
+			}
+			else
+				file << *it << endl;
+		}
+		file.close();
+	}
+}
+
+
 void saveUserDataLocally() {
 	fstream file;
 	file.open("UserData.csv", ios::out);
@@ -128,6 +166,8 @@ void saveAllDataLocally() {
 	saveMedicineDataLocally();
 	saveUserDataLocally();
 	saveRequestsDataLocally();
+	savePayMethodeLocally();
+
 }
 
 void saveMedicineDataToArr() {
@@ -234,4 +274,5 @@ void saveOneUserDataLocally() {
 void saveAllDataToArr() {
 	saveMedicineDataToArr();
 	saveUserDataToArr();
+	savePayMethodeToVec();
 }
