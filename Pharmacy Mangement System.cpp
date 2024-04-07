@@ -6,11 +6,13 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include<vector>
 #include "SaveData.h"
+#include "SaveData.cpp"
 using namespace std;
 
 //**********Declarations***********//
-
+vector<string> paymentMethods;
 const int Size = 100;
 int medicine_data = 0;
 int user_data = 0;
@@ -110,6 +112,9 @@ void addUser();
 void updateUser();
 void viewAllUsers();
 void logOut();
+void managePaymentMethodes();
+void showPaymentMehtode(vector<string> x);
+
 
 //**********Functions***********//
 
@@ -324,6 +329,84 @@ void editUserCredentials(int index)
 
 
 }
+
+
+void showPaymentMehtode(vector<string> x)
+{
+	int c = 1;
+	for (auto it = x.begin(); it != x.end(); ++it)
+	{
+		cout << "[" << c << "] " << *it << endl;
+		c++;
+	}
+}
+void managePaymentMethodes()
+{
+	vector<string>::iterator it = paymentMethods.begin();
+	char chooseP;
+
+	int m = 0;
+	while (true)
+	{
+		if (m > 0)
+		{
+			cout << "invalid input try again from the list given : \n";
+		}
+		cout << "Edit payment methodes : " << "\n";
+		cout << "[1] show existed payment methodes\n";
+		cout << "[2] add new payment methode      \n";
+		cout << "[3] delete payment methode       \n";
+		cout << "choose from the above : "; cin >> chooseP;
+		m++;
+		if (chooseP >= '1' && chooseP <= '3')
+		{
+			break;
+		}
+		system("cls");
+	}
+
+
+	switch (chooseP)
+	{
+		case '1':
+		{
+			system("cls");
+			cout << "=== payment methodes available now are === \n";
+			showPaymentMehtode(paymentMethods);
+			break;
+		}
+		case '2':
+		{
+			system("cls");
+			string newMethode;
+			cout << "=== Adding new Payment methode ===\n";
+			cout << "insert method's name: ";
+			cin.ignore(1, '\n');
+			getline(cin, newMethode, '\n');
+			cout << "methode now available are: \n";
+			paymentMethods.push_back(newMethode);
+			showPaymentMehtode(paymentMethods);
+			savePayMethodeLocally();
+
+			break;
+		}
+		case '3':
+		{
+			system("cls");
+			int chooseD;
+			cout << "\n=== delete payment methode ===\n";
+			showPaymentMehtode(paymentMethods);
+			cout << "\nchoose methode to delete from the given list: "; cin >> chooseD;
+			*it = chooseD - 1;
+			paymentMethods.erase(it, it + 1);
+			cout << "methodes available now is : \n\n";
+			showPaymentMehtode(paymentMethods);
+			savePayMethodeLocally();
+		}
+
+	}
+}
+
 
 bool searchForMedicineByName() {
 	string name;
