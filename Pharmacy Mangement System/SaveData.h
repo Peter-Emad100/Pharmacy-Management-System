@@ -7,5 +7,3 @@ void saveMedicineDataToArr();
 void saveUserDataToArr();
 void saveAllDataToArr();
 void saveOneUserDataLocally();
-void savePayMethodeLocally();
-void savePayMethodeToVec();

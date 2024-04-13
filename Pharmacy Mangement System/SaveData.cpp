@@ -1,15 +1,17 @@
 #include <string>
 #include <iostream>
-#include <fstream>
 #include <vector>
+#include <fstream>
 #include "SaveData.h"
 
 using namespace std;
-vector<string> paymentMethods;
+
 extern const int Size = 100;
 extern int medicine_data;
 extern int user_data;
 extern int requestcounter;
+vector<string> paymentMethods;
+
 
 struct medicine {
 	int ID;
@@ -84,6 +86,7 @@ void saveMedicineDataLocally() {
 		file.close();
 	}
 }
+
 void savePayMethodeToVec()
 {
 	fstream file;
@@ -117,6 +120,8 @@ void savePayMethodeLocally()
 		file.close();
 	}
 }
+
+
 void saveUserDataLocally() {
 	fstream file;
 	file.open("UserData.csv", ios::out);
@@ -162,6 +167,7 @@ void saveAllDataLocally() {
 	saveUserDataLocally();
 	saveRequestsDataLocally();
 	savePayMethodeLocally();
+
 }
 
 void saveMedicineDataToArr() {
