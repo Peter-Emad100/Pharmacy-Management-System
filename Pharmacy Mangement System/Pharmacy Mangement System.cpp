@@ -8,11 +8,10 @@
 #include <iomanip>
 #include<vector>
 #include "SaveData.h"
-#include "SaveData.cpp"
 using namespace std;
 
 //**********Declarations***********//
-vector<string> paymentMethods;
+extern vector<string> paymentMethods;
 const int Size = 100;
 int medicine_data = 0;
 int user_data = 0;
@@ -164,7 +163,7 @@ bool isUsernameTaken(string username) {
 }
 
 void signUp() {
-	
+
 	int id = user_data + 1; // Next available ID
 
 	newUser.ID = id;
@@ -207,9 +206,9 @@ void signUp() {
 	users[id - 1] = newUser; // Save the new user data into our users array
 
 	cout << "Congratulations! Your account has been successfully created.\n";
-	
+
 	saveOneUserDataLocally();
-	
+
 	user_data++;										 // Increment user_data to keep track of the total number of users
 }
 
@@ -228,7 +227,7 @@ bool validateUser(string username, string password, user& currentUser)
 			return true;
 		}
 		userIndex++;
-    
+
 	}
 	return false;
 }
@@ -329,84 +328,6 @@ void editUserCredentials(int index)
 
 
 }
-
-
-void showPaymentMehtode(vector<string> x)
-{
-	int c = 1;
-	for (auto it = x.begin(); it != x.end(); ++it)
-	{
-		cout << "[" << c << "] " << *it << endl;
-		c++;
-	}
-}
-void managePaymentMethodes()
-{
-	vector<string>::iterator it = paymentMethods.begin();
-	char chooseP;
-
-	int m = 0;
-	while (true)
-	{
-		if (m > 0)
-		{
-			cout << "invalid input try again from the list given : \n";
-		}
-		cout << "Edit payment methodes : " << "\n";
-		cout << "[1] show existed payment methodes\n";
-		cout << "[2] add new payment methode      \n";
-		cout << "[3] delete payment methode       \n";
-		cout << "choose from the above : "; cin >> chooseP;
-		m++;
-		if (chooseP >= '1' && chooseP <= '3')
-		{
-			break;
-		}
-		system("cls");
-	}
-
-
-	switch (chooseP)
-	{
-		case '1':
-		{
-			system("cls");
-			cout << "=== payment methodes available now are === \n";
-			showPaymentMehtode(paymentMethods);
-			break;
-		}
-		case '2':
-		{
-			system("cls");
-			string newMethode;
-			cout << "=== Adding new Payment methode ===\n";
-			cout << "insert method's name: ";
-			cin.ignore(1, '\n');
-			getline(cin, newMethode, '\n');
-			cout << "methode now available are: \n";
-			paymentMethods.push_back(newMethode);
-			showPaymentMehtode(paymentMethods);
-			savePayMethodeLocally();
-
-			break;
-		}
-		case '3':
-		{
-			system("cls");
-			int chooseD;
-			cout << "\n=== delete payment methode ===\n";
-			showPaymentMehtode(paymentMethods);
-			cout << "\nchoose methode to delete from the given list: "; cin >> chooseD;
-			*it = chooseD - 1;
-			paymentMethods.erase(it, it + 1);
-			cout << "methodes available now is : \n\n";
-			showPaymentMehtode(paymentMethods);
-			savePayMethodeLocally();
-		}
-
-	}
-}
-
 
 bool searchForMedicineByName() {
 	string name;
@@ -669,6 +590,80 @@ void showAllPreviousOrders() {
 
 
 }
+void showPaymentMehtode(vector<string> x)
+{
+	int c = 1;
+	for (auto it = x.begin(); it != x.end(); ++it)
+	{
+		cout << "[" << c << "] " << *it << endl;
+		c++;
+	}
+}
+void managePaymentMethodes()
+{
+	vector<string>::iterator it = paymentMethods.begin();
+	char chooseP;
+
+	int m = 0;
+	while (true)
+	{
+		if (m > 0)
+		{
+			cout << "invalid input try again from the list given : \n";
+		}
+		cout << "Edit payment methodes : " << "\n";
+		cout << "[1] show existed payment methodes\n";
+		cout << "[2] add new payment methode      \n";
+		cout << "[3] delete payment methode       \n";
+		cout << "choose from the above : "; cin >> chooseP;
+		m++;
+		if (chooseP >= '1' && chooseP <= '3')
+		{
+			break;
+		}
+		system("cls");
+	}
+
+
+	switch (chooseP)
+	{
+	case '1':
+	{
+		system("cls");
+		cout << "=== payment methodes available now are === \n";
+		showPaymentMehtode(paymentMethods);
+		break;
+	}
+	case '2':
+	{
+		system("cls");
+		string newMethode;
+		cout << "=== Adding new Payment methode ===\n";
+		cout << "insert method's name: ";
+		cin.ignore(1, '\n');
+		getline(cin, newMethode, '\n');
+		cout << "methode now available are: \n";
+		paymentMethods.push_back(newMethode);
+		showPaymentMehtode(paymentMethods);
+		savePayMethodeLocally();
+		break;
+	}
+	case '3':
+	{
+		system("cls");
+		int chooseD;
+		cout << "\n=== delete payment methode ===\n";
+		showPaymentMehtode(paymentMethods);
+		cout << "\nchoose methode to delete from the given list: "; cin >> chooseD;
+		*it = chooseD - 1;
+		paymentMethods.erase(it, it + 1);
+		cout << "methodes available now is : \n\n";
+		showPaymentMehtode(paymentMethods);
+		savePayMethodeLocally();
+	}
+
+	}
+}
 
 void addUser()
 {
@@ -681,10 +676,11 @@ void addUser()
 		cin >> newUser.username;
 
 		if (isUsernameTaken(newUser.username))
+
 			cout << "A user with that username already exists. Please enter a different username: ";
 
 
-	} while (isUsernameTaken(newUser.username)); 
+	} while (isUsernameTaken(newUser.username));
 
 
 	cout << "Password: ";
@@ -755,12 +751,12 @@ void updateUser() {
 	cout << "Current phone number: " << users[index].phone << "\n";
 
 
-	if (users[index].his_role == user::User) 
+	if (users[index].his_role == user::User)
 		cout << "Current role: User\n";
-	else if (users[index].his_role == user::Admin) 
+	else if (users[index].his_role == user::Admin)
 		cout << "Current role: Admin\n";
-	
-	
+
+
 
 	char choice;
 	int roleChoice;
@@ -776,19 +772,31 @@ void updateUser() {
 
 		int option;
 		cin >> option;
-
+		string newUsername;
+		bool userNameChanged = false;
 		switch (option) {
 		case 1:
-
-			do {
+			
+			
+			while (!userNameChanged) {
 				cout << "Enter new username: ";
-				cin >> users[index].username;
+				cin >> newUsername;
 
-				if (isUsernameTaken(users[index].username)) {
-					cout << "Username already exists. Please choose a different username.\n";
+				if (newUsername == users[index].username) {
+					cout << "The new username is the same as the current one. Please enter a different username.\n";
+					
 				}
-			} while (isUsernameTaken(users[index].username));
-
+				else if (isUsernameTaken(newUsername)) {
+					cout << "A user with that username already exists. Please enter a different username.\n";
+					
+				}
+				else {
+					users[index].username = newUsername;
+					cout << "Username updated successfully!\n";
+					userNameChanged = true;
+					
+				}
+			}
 			break;
 		case 2:
 			cout << "Enter new password: ";
@@ -808,21 +816,16 @@ void updateUser() {
 			cin >> users[index].phone;
 			break;
 		case 6:
-
-			do {
-				cout << "Enter new role\n1-User\n2-Admin\n";
-
-				cin >> roleChoice;
-				if (roleChoice == 1) {
-					users[index].his_role = user::User;
-				}
-				else if (roleChoice == 2) {
-					users[index].his_role = user::Admin;
-				}
-				else {
-					cout << "Invalid role choice. Please enter 1 for User or 2 for Admin.\n";
-				}
-			} while (roleChoice != 1 && roleChoice != 2);
+			if (users[index].his_role == user::User) {
+				users[index].his_role = user::Admin;
+				cout << "Role updated successfully! Your new role is Admin.\n";
+				
+			}
+			else {
+				users[index].his_role = user::User;
+				cout << "Role updated successfully! Your new role is User.\n";
+			}
+			
 			break;
 
 		default:
@@ -852,8 +855,8 @@ int main()
 	//saveAllDataLocally();
 	saveAllDataToArr();
 	//signUp();
-	//logInInterface();
-	
+	logInInterface();
+
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
@@ -871,7 +874,7 @@ int main()
 			cin >> amountrequested;
 			makeRequest(currentUser.username, medicineName, amountrequested);
 		}
-		
+
 	}
 	else {
 		if (chosenOption == 14)
@@ -893,5 +896,5 @@ int main()
 			updateUser();
 	}
 
-	
+
 }
