@@ -66,14 +66,19 @@ user currentUser; //Temp to keep the current user's data
 struct order {
 	int userID;
 	string orderDate;
+	int orderID;
+	bool orderState = false;
 	int medicine_ID[10] = {};
 	float totalPrice;
+
 	string shipDate;
-	void initialize(int _id, string _orderDate, int _medicine_ID[], float _Price, string _shipDate) {
+	void initialize(int _id, string _orderDate, int _medicine_ID[], float _Price, string _shipDate, int order_id, bool order_state) {
 		userID = _id;
 		orderDate = _orderDate;
 		totalPrice = _Price;
 		shipDate = _shipDate;
+		orderID = order_id;
+		orderState = order_state;
 		int i = 0;
 		while (_medicine_ID[i] != 0) {
 			medicine_ID[i] = _medicine_ID[i];
@@ -82,6 +87,7 @@ struct order {
 
 	}
 };
+
 order orders[Size] = {};
 
 struct request {
@@ -144,11 +150,13 @@ void dataForTestPurposes() {
 
 	//--------------------------------------------------------------------------------------------------------------------------------------------------------
 	int medicine1[] = { 1, 2, 3, 0 };
-	orders[0].initialize(1, "2024-03-27", medicine1, 500.0, "2024-03-27");
+	orders[0].initialize(1, "2024-03-27", medicine1, 500.0, "2024-03-27", 1, false);
 	int medicine2[] = { 4, 5, 0 };
-	orders[1].initialize(2, "2024-03-28", medicine2, 300.0, "2024-03-28");
+	orders[1].initialize(2, "2024-03-28", medicine2, 300.0, "2024-03-28", 2, true);
 	int medicine3[] = { 9, 4,5,7 ,0 };
-	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29");
+	orders[2].initialize(3, "2024-03-29", medicine3, 3000.0, "2024-03-29", 3, true);
+
+
 }
 
 bool isUsernameTaken(string username) {
@@ -421,6 +429,8 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 	int medicine1[10]{};
 	int quantity1[10]{};
 	float sum = 0;
+	int orderId=-1;
+	bool orderState=false;
 
 	//take medecine id and quantity
 	for (int i = 0; i < 10; i++)
@@ -487,7 +497,7 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 	cout << "ordertime : " << orderTime << '\n';
 
 	//create an order
-	orders[0].initialize(customerID, orderDate, medicine1, sum, shipDate);
+	orders[0].initialize(customerID, orderDate, medicine1, sum, shipDate, orderId, orderState);
 
 
 
@@ -842,6 +852,37 @@ void updateUser() {
 	saveUserDataLocally();
 }
 
+void trackorder(order orders[])
+{
+	bool orderfound = false;
+	int orderid = -1;
+	cout << "enter id : ";
+	cin >> orderid;
+	for (size_t i = 0; i < 3; i++)
+	{
+		if (orderid == orders[i].orderID)
+		{
+
+			if (orders[i].orderState == 0)
+			{
+				cout << "OrderNotDelivered" << endl;
+
+			}
+			else
+			{
+				cout << "OrderDelivered" << endl;
+			}
+			orderfound = true;
+		}
+
+	}
+	if (orderfound != true)
+	{
+		cout << "order not found enter another id " << endl;
+		trackorder(orders);
+	}
+
+}
 
 
 void logOut()
@@ -851,7 +892,8 @@ void logOut()
 
 int main()
 {
-	//dataForTestPurposes();
+	dataForTestPurposes();
+	trackorder(orders);
 	//saveAllDataLocally();
 	saveAllDataToArr();
 	//signUp();
