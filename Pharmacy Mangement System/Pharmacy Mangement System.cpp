@@ -112,10 +112,9 @@ void makeOrder(int customerID, string orderDate, string shipDate, int orderTime,
 void showOrderReceipt(order lastOrder);
 void makeRequest(string _username, string _medicineName, int _amountReq);
 void showAllPreviousOrders();
-void manageUsersOptions();
 void addUser();
 void updateUser();
-void viewAllUsers();
+void removeUser();
 void logOut();
 void managePaymentMethodes();
 void showPaymentMehtode(vector<string> x);
@@ -161,7 +160,7 @@ void dataForTestPurposes() {
 
 bool isUsernameTaken(string username) {
 	int i = 0;
-	while (users[i].ID != 0) {
+	while (users[i].ID != -1) {
 		if (users[i].username == username) {
 			return true;
 		}
@@ -226,7 +225,7 @@ bool validateUser(string username, string password, user& currentUser)
 
 	// Loop through the users until a user with userID = 0 is found,
 	// indicating that there are no more users in our database
-	while (users[userIndex].ID != 0)
+	while (users[userIndex].ID != -1)
 	{
 		if (users[userIndex].username == username && users[userIndex].password == password)
 		{
@@ -267,7 +266,7 @@ void logInInterface()
 			{
 				adminPermissions();
 			}
-			//editUserCredentials(currentUser.ID-1);
+			
 			cin >> chosenOption;
 		}
 
@@ -739,16 +738,24 @@ void updateUser() {
 		cout << "Enter the ID of the user you are willing to update: ";
 		cin >> userID;
 
-		for (int i = 0; i < user_data; ++i) {
+		if (userID <= 0) {
+			cout << "Invalid ID.\n";
+			continue;
+		}
+
+		int i = 0;
+		while (users[i].ID != 0) {
 			if (users[i].ID == userID) {
 				userFound = true;
 				index = i;
 				break;
 			}
+
+			++i;
 		}
 
 		if (!userFound) {
-			cout << "User not found. Please enter a valid ID.\n";
+			cout << "User not found.\n";
 		}
 	}
 
@@ -849,7 +856,42 @@ void updateUser() {
 
 	cout << "User updated successfully!\n";
 
-	saveUserDataLocally();
+	saveOneUserDataLocally();
+}
+
+void removeUser()
+{
+	int userID;
+    bool userFound = false;
+
+	while (!userFound) {
+		cout << "Enter the ID of the user you are willing to remove: ";
+		cin >> userID;
+
+		if (userID <= 0) {
+			cout << "Invalid ID.\n";
+			continue;
+		}
+
+
+		int i = 0;
+		while (users[i].ID != 0) {
+			if (users[i].ID == userID) {
+				userFound = true;
+				users[i].ID = -1;
+				cout << "User with ID: " << userID << " has been removed.\n";
+				saveUserDataLocally();
+				break;
+			}
+			++i;
+
+
+		}
+
+		if (!userFound) {
+			cout << "User not found.\n";
+		}
+	}
 }
 
 void trackorder(order orders[])
@@ -893,7 +935,6 @@ void logOut()
 int main()
 {
 	dataForTestPurposes();
-	trackorder(orders);
 	//saveAllDataLocally();
 	saveAllDataToArr();
 	//signUp();
@@ -936,7 +977,9 @@ int main()
 			addUser();
 		else if (chosenOption == 2)
 			updateUser();
+		else if (chosenOption == 3)
+			removeUser();
 	}
-
-
+	
+	
 }
