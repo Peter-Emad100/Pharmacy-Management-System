@@ -160,12 +160,7 @@ void dataForTestPurposes() {
 
 bool isUsernameTaken(string username) {
 	int i = 0;
-	while (users[i].ID != 0) {
-		if (users[i].ID == -1)
-		{
-			++i;
-			continue;
-		}
+	while (users[i].ID != -1) {
 		if (users[i].username == username) {
 			return true;
 		}
@@ -188,7 +183,7 @@ void signUp() {
 			cout << "A user with that username already exists. Please enter a different username: ";
 
 
-	} while (isUsernameTaken(newUser.username)); //Checks if username is already in our database or no.
+	} while (isUsernameTaken(newUser.username)); //Checks if username is already taken in our database or no.
 
 	cout << "Enter your password: ";
 	cin >> newUser.password;
@@ -230,16 +225,8 @@ bool validateUser(string username, string password, user& currentUser)
 
 	// Loop through the users until a user with userID = 0 is found,
 	// indicating that there are no more users in our database
-	while (users[userIndex].ID != 0)
+	while (users[userIndex].ID != -1)
 	{
-		if (users[userIndex].ID == -1)
-		{
-			userIndex++;
-			continue;
-		}
-
-			
-		
 		if (users[userIndex].username == username && users[userIndex].password == password)
 		{
 			currentUser = users[userIndex];     //Avoiding any kind of problem when showing permissions based on the role 
