@@ -89,7 +89,7 @@ struct order {
 };
 
 order orders[Size] = {};
-
+void manage_orders(order orders[Size]);
 struct request {
 	int userID;
 	string medicineName;
@@ -937,7 +937,104 @@ void trackorder(order orders[])
 	}
 
 }
+void manage_orders(order orders[Size]) {
+	int ID, indx;
+	bool found = 0;
+	cout << "Enter the orders's ID: ";
+	cin >> ID;
+	cout << '\n';
+	for (int i = 0; i < Size; i++) {
+		if (ID == orders[i].orderID) {
+			found = 1;
+			indx = i;
+			break;
+		}
+	}
+	
+	if (found) { // display the order first
+		for (int j = 0; j < 10; j++) {
+			if (orders[indx].medicine_ID[j] == 0) {
+				break;
+			}
+			for (int i = 0; i < Size; i++) {
 
+				if (medicines[i].ID == orders[indx].medicine_ID[j]) {
+					cout << "Name of the medicine: " << medicines[i].name << "\n";
+					cout << "concentraion of the medicine" << medicines[i].concentration << "\n";
+					cout << "-----------------------------------------------\n";
+				}
+			}
+		}
+		cout << "Order's date: " << orders[indx].orderDate << '\n';
+		cout << "Order's state: " << orders[indx].orderState << '\n';
+		cout << "Ship date: " << orders[indx].shipDate << '\n';
+		cout << "Total price: " << orders[indx].totalPrice << '\n';
+
+	}
+	else {
+		cout << "There is no order with this ID\n";
+		cout << "Please try again\n";
+	}
+	char answer = 'y';
+	do{
+		int choice;
+	cout << "What do you want to edit?\n";
+	cout << "1. Order's state \n";
+	cout << "2. Total price \n";
+	cout << "Enter your choice: ";
+	cin >> choice;
+	switch (choice) {
+	case 1:
+		if (orders[indx].orderState == 0) {
+			cout << "Order' state is: ";
+			if (orders[indx].orderState == 0) {
+				cout << "Not Delivered \n";
+
+			}
+
+			else {
+				cout << "Delivered \n";
+			}
+		}
+			cout << "Do you want to change the order's state ?   choose y/n \n";
+			char change;
+				cin >> change;
+				if (change == 'y' or change == 'Y') {
+					if (orders[indx].orderState == 0) {
+						orders[indx].orderState = 1;
+						cout << "Orders's state is now 'Delivered' ";
+					}
+
+					else {
+						if (orders[indx].orderState == 1) {
+							orders[indx].orderState = 0;
+							cout << "Orders's state is now 'Not Delivered' ";
+						}
+					}
+				}
+		else {
+			break;
+		}
+			break;
+		
+	case 2:
+		int new_price;
+		cout << "Total price: " << orders[indx].totalPrice << '\n';
+		cout << "Enter new price: ";
+		cin >> new_price;
+		cout << "\n";
+		orders[indx].totalPrice = new_price;
+		cout << " Total price is now: " << orders[indx].totalPrice << '\n';
+		break;
+
+	}
+	
+		cout << "Would you like to make any additional edits? Choose between y/n : ";
+		cin >> answer;
+
+		} while (answer == 'y' || answer == 'Y');
+		cout << "Order updated successfully!\n";
+}
 
 void logOut()
 {
@@ -955,7 +1052,7 @@ int main()
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
-	if (currentUser.his_role == user::User) {
+	/*if (currentUser.his_role == user::User) {
 		if (chosenOption == 8)
 			showAllPreviousOrders();
 		else if (chosenOption == 7)
@@ -992,6 +1089,7 @@ int main()
 		else if (chosenOption == 3)
 			removeUser();
 	}
-	
+	*/
+	manage_orders(orders);
 	
 }
