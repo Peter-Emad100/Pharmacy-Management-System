@@ -496,7 +496,7 @@ void makeOrder(string medicineIDS) {
 		lastyorder = {};
 		current_time = "";
 	}
-	else {
+	if(error_id==false && error_format==false) {
 		int i = 0;
 		for (i; orders[i].orderID != 0; i++);
 		orders[i] = lastyorder;
