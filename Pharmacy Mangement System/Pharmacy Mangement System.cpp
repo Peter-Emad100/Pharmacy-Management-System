@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iomanip>
 #include<vector>
+#include <ctime>
 #include "SaveData.h"
 using namespace std;
 
@@ -87,7 +88,6 @@ struct order {
 
 	}
 };
-
 order orders[Size] = {};
 void manage_orders(order orders[Size]);
 struct request {
@@ -108,8 +108,8 @@ void adminPermissions();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
 void searchForMedicineByCategory();
-void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]);
-void showOrderReceipt(order lastOrder);
+void makeOrder(string medicineIDS);
+void showOrderReceipt(order lastOrder,string current_time);
 void makeRequest(string _username, string _medicineName, int _amountReq);
 void showAllPreviousOrders();
 void addUser();
@@ -435,86 +435,75 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 	return difference;
 }
 
-void makeOrder(int customerID, string orderDate, string shipDate, int orderTime, medicine m[10]) {
-	char choice = 'a';
-	int medicine1[10]{};
-	int quantity1[10]{};
-	float sum = 0;
-	int orderId=-1;
-	bool orderState=false;
-
-	//take medecine id and quantity
-	for (int i = 0; i < 10; i++)
-	{
-		cout << "select medicine id\n";
-		int medicineid = -1;
-		cin >> medicineid;
-		medicineid = medicineid - 1;
-		medicine1[i] = medicineid + 1;
-
-		cout << "select quantity\n";
-		int quantity = 0;
-		cin >> quantity;
-		quantity1[i] = quantity;
-
-		while (quantity > m[medicineid].quantity_in_stock)
-		{
-			cout << "quantity in stock is : " << m[medicineid].quantity_in_stock << '\n';
-			cout << "select quantity\n";
-			cin >> quantity;
-		}
-		//calculate total price of each medicine
-		sum = sum + (quantity * m[medicineid].price);
-		cout << "Total Price : " << sum << '\n';
-
-		cout << "Do you want to add medicine?" << "y" << "/" << "n\n";
-		cin >> choice;
-		if (choice != 'y')
-		{
-			break;
+void makeOrder(string medicineIDS) {
+	// this function can be hard to understand on the first look ..
+	//  if you are a team member and need to use it feel free to ask me about it .. "peter"
+	order lastyorder = {};
+	int length = medicineIDS.size();
+	int first_space_pos = -1, second_space_pos = -1;
+	int j = 0;
+	bool error_format = false;
+	bool error_id = false;
+	string current_time;
+	// simple general try and catch code because this can execute some exception dependent on user input format
+	try{
+	// a loop to split string input into medicine id array
+		for (int i = 0; i < length + 1; i++) {
+			if (medicineIDS[i] == ' ' || medicineIDS[i] == '\0') {
+				first_space_pos = second_space_pos + 1;
+				second_space_pos = i;
+				lastyorder.medicine_ID[j] = stoi(medicineIDS.substr(first_space_pos, (second_space_pos - first_space_pos)));
+				j++;
+			}
 		}
 	}
-
-	int Payment_method = -1;
-	//choose payment method
-	while (true)
-	{
-		cout << "Choose payment method (Cash, pick at pharmacy, add visa)(1,2,3)\n";
-		cin >> Payment_method;
-
-		if (Payment_method == 1)
-		{
-			cout << "payment with cash\n";
-
-		}
-		else if (Payment_method == 2)
-		{
-			cout << "pick at pharmacy\n";
-		}
-		else if (Payment_method == 3)
-		{
-			cout << "payment with visa\n";
-		}
-
-		cout << "are you sure? (y / n)\n";
-		char choice2;
-		cin >> choice2;
-
-		if (choice2 == 'y')
-		{
-			break;
-		}
+	catch (...) {
+		cout << "your input is in a wrong format ... this order will not be excuted" << endl;
+		error_format = true;
 	}
-	cout << "ordertime : " << orderTime << '\n';
+	// the order will be done only if the input was in the right format
+	if (error_format == false) {
+		int x = 0;
+		bool found = false;
+		while (x != 10 && lastyorder.medicine_ID[x] != 0) {
+			 found = false;
+			for (int k = 0; medicines[k].ID != 0; k++) {
+				if (medicines[k].ID == lastyorder.medicine_ID[x]) {
+					lastyorder.totalPrice += medicines[k].price;
+					found = true; 
+				}
+			}
+			if (found == false) {
+				error_id = true;
+			}
+			x++;
+		}
 
-	//create an order
-	orders[0].initialize(customerID, orderDate, medicine1, sum, shipDate, orderId, orderState);
+		lastyorder.userID = currentUser.ID;
+		time_t t = time(0); // Get time now
+		tm now;
+		localtime_s(&now, &t);
+		lastyorder.orderDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
+		lastyorder.orderState = 0;
+		lastyorder.shipDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
+		current_time = to_string(now.tm_hour) + ':' + to_string(now.tm_min) + ':' + to_string(now.tm_sec);
 
-
-
+	}
+	//order will only be saved or excuted if all ids are right
+	if (error_id == true) {
+		cout << "you entered a wrong id , your order will not be excuted" << endl;
+		lastyorder = {};
+		current_time = "";
+	}
+	else {
+		int i = 0;
+		for (i; orders[i].orderID != 0; i++);
+		orders[i] = lastyorder;
+	}
+	showOrderReceipt(lastyorder, current_time);
 }
 
-void showOrderReceipt(order lastOrder) {
+void showOrderReceipt(order lastOrder , string current_time) {
 	cout << "order date : " << lastOrder.orderDate << '\n';
 	int i = 0;
 	while (lastOrder.medicine_ID[i] != 0) {
@@ -524,6 +513,7 @@ void showOrderReceipt(order lastOrder) {
 	cout << "user id : " << lastOrder.userID << '\n';
 	cout << "total price : " << lastOrder.totalPrice << '\n';
 	cout << "ship date : " << lastOrder.shipDate << '\n';
+	cout << "current time :" << current_time << '\n';
 }
 
 void makeRequest(string _username, string _medicineName, int _amountReq)
@@ -1047,7 +1037,7 @@ int main()
 	//saveAllDataLocally();
 	saveAllDataToArr();
 	//signUp();
-	logInInterface();
+	//logInInterface();
 
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
@@ -1090,6 +1080,9 @@ int main()
 			removeUser();
 	}
 	*/
-	manage_orders(orders);
+	//manage_orders(orders);
+	string orr;
+	getline(cin , orr);
+	makeOrder(orr);
 	
 }
