@@ -436,8 +436,9 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 }
 
 void makeOrder(string medicineIDS) {
-	// this function can be hard to understand on the first look ..
-	//  if you are a team member and need to use it feel free to ask me about it .. "peter"
+	// this function might take some time to be understood ... 
+	// i tried my best to make it more understandable with comments
+	//Good Luck
 	order lastyorder = {};
 	int length = medicineIDS.size();
 	int first_space_pos = -1, second_space_pos = -1;
