@@ -1,7 +1,7 @@
 sep=|
 ID|Name|Category|Description|Concentration|Quantity in stock|Availabilty|Price
 1|Paracetamol|Analgesic|Pain reliever and fever reducer|500 mg|100|1|5.99
-2|Lisinopril|Antihypertensive|Used to treat high blood pressure|10 mg|50|1|10.49
+-1|Lisinopril|Antihypertensive|Used to treat high blood pressure|10 mg|50|1|10.49
 3|Omeprazole|Gastrointestinal|Treats heartburn, stomach ulcers, and gastroesophageal reflux disease (GERD)|20 mg|80|1|7.25
 4|Atorvastatin|Lipid-lowering agent|Lowers high cholesterol and triglycerides|20 mg|30|1|15.75
 5|Metformin|Antidiabetic|Treats type 2 diabetes|500 mg|60|1|8.99

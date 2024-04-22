@@ -68,7 +68,7 @@ void saveMedicineDataLocally() {
 	{
 		file << "sep=|\n";
 		file << "ID" << '|' << "Name" << '|' << "Category" << '|' << "Description" << '|' << "Concentration" << '|' << "Quantity in stock" << '|' << "Availabilty" << '|' << "Price\n";
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < medicine_data; i++)
 		{
 			file << medicines[i].ID << '|';
 			file << medicines[i].name << '|';
@@ -76,7 +76,6 @@ void saveMedicineDataLocally() {
 			file << medicines[i].description << '|';
 			file << medicines[i].concentration << '|';
 			file << medicines[i].quantity_in_stock << '|';
-
 			file << medicines[i].availability << '|';
 			file << medicines[i].price;
 			file << '\n';
@@ -84,21 +83,7 @@ void saveMedicineDataLocally() {
 		file.close();
 	}
 }
-void savePayMethodeToVec()
-{
-	fstream file;
-	file.open("payMethode.txt", ios::in);
-	if (file.is_open())
-	{
-		string line;
-		while (!file.eof())
-		{
-			getline(file, line);
-			paymentMethods.push_back(line);
-		}
-		file.close();
-	}
-}
+
 void savePayMethodeLocally()
 {
 	fstream file;
@@ -164,7 +149,7 @@ void saveAllDataLocally() {
 	savePayMethodeLocally();
 }
 
-void saveMedicineDataToArr() {
+void loadMedicineDataToArr() {
 	fstream file;
 	file.open("MedicineData.csv", ios::in);
 	if (file.is_open())
@@ -208,7 +193,7 @@ void saveMedicineDataToArr() {
 	}
 }
 
-void saveUserDataToArr() {
+void loadUserDataToArr() {
 	fstream file;
 	file.open("UserData.csv", ios::in);
 	if (file.is_open())
@@ -248,6 +233,28 @@ void saveUserDataToArr() {
 	}
 }
 
+void loadPayMethodeToVec()
+{
+	fstream file;
+	file.open("payMethode.txt", ios::in);
+	if (file.is_open())
+	{
+		string line;
+		while (!file.eof())
+		{
+			getline(file, line);
+			paymentMethods.push_back(line);
+		}
+		file.close();
+	}
+}
+
+void loadAllDataToArr() {
+	loadMedicineDataToArr();
+	loadUserDataToArr();
+	loadPayMethodeToVec();
+}
+
 void saveOneUserDataLocally() {
 	fstream file;
 	file.open("UserData.csv", ios::app);
@@ -265,8 +272,20 @@ void saveOneUserDataLocally() {
 	file.close();
 }
 
-void saveAllDataToArr() {
-	saveMedicineDataToArr();
-	saveUserDataToArr();
-	savePayMethodeToVec();
+void saveOneMedDataLocally() {
+	fstream file;
+	file.open("MedicineData.csv", ios::app);
+	if (file.is_open())
+	{
+		file << medicines[medicine_data].ID << '|';
+		file << medicines[medicine_data].name << '|';
+		file << medicines[medicine_data].category << '|';
+		file << medicines[medicine_data].description << '|';
+		file << medicines[medicine_data].concentration << '|';
+		file << medicines[medicine_data].quantity_in_stock << '|';
+		file << medicines[medicine_data].availability << '|';
+		file << medicines[medicine_data].price;
+		file << '\n';
+	}
+	file.close();
 }

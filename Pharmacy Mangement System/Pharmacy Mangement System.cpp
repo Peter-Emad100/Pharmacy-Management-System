@@ -100,11 +100,14 @@ request requests[15];
 //********Function Declares***********//
 void dataForTestPurposes();
 bool isUsernameTaken(string username);
+bool isMedNameTaken(string MedName);
 void signUp();
 bool validateUser(string username, string password, user& currentUser);
 void logInInterface();
 void userPermissions();
 void adminPermissions();
+void addMedicine();
+void removeMedicine();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
 void searchForMedicineByCategory();
@@ -168,6 +171,23 @@ bool isUsernameTaken(string username) {
 		}
 
 		if (users[i].username == username) {
+			return true;
+		}
+		++i;
+	}
+	return false;
+}
+
+bool isMedNameTaken(string MedName) {
+	int i = 0;
+	while (medicines[i].ID != 0) {
+		if (medicines[i].ID == -1)
+		{
+			++i;
+			continue;
+		}
+
+		if (medicines[i].name == MedName) {
 			return true;
 		}
 		++i;
@@ -273,13 +293,18 @@ void logInInterface()
 			if (currentUser.his_role == user::User)
 			{
 				userPermissions();
+				cin >> chosenOption;
 			}
 			else
 			{
 				adminPermissions();
+				cin >> chosenOption;
+				if (chosenOption == 4)
+					addMedicine();
+				else if (chosenOption == 5)
+					removeMedicine();
+
 			}
-			
-			cin >> chosenOption;
 		}
 
 
@@ -317,6 +342,82 @@ void adminPermissions() {
 	cout << "12- View order\n";
 	cout << "13- Request drug\n";
 	cout << "14- View all previous orders\n";
+}
+
+void addMedicine() {
+	medicine newMedicine;
+	newMedicine.ID = medicine_data + 1; //medicine_data is the number of the amount of medicines aka the last ID minus one since the arr is zero based :P
+	newMedicine.availability = true;
+	
+	cout << "Enter the name of the medicine: ";
+	do {
+		cin >> newMedicine.name;
+		if (isMedNameTaken(newMedicine.name))
+			cout << "A medicine with that name already exists. Please enter a different name: ";
+	} while (isMedNameTaken(newMedicine.name));
+	
+	cout << "Enter the description of the medicine: ";
+	cin >> newMedicine.description;
+	
+	cout << "Enter the concentration of the medicine: ";
+	cin >> newMedicine.concentration;
+	
+	cout << "Enter the category of the medicine: ";
+	cin >> newMedicine.category;
+	
+	cout << "Enter the price of the medicine: ";
+	do {
+		cin >> newMedicine.price;
+		if (newMedicine.price <= 0)
+			cout << "The price of the medicine can't be equal or less than 0. Please enter a positive number: ";
+	} while (newMedicine.price <= 0);
+
+	cout << "Enter the quantity in stock of the medicine: ";
+	do {
+		cin >> newMedicine.quantity_in_stock;
+		if (newMedicine.quantity_in_stock < 0)
+			cout << "The quantity is stock of the medicine can't be less than 0. Please enter a positive number: ";
+		else if (newMedicine.quantity_in_stock == 0)
+			newMedicine.availability = false;
+	} while (newMedicine.quantity_in_stock < 0);
+
+	medicines[medicine_data] = newMedicine;
+	saveOneMedDataLocally();
+	medicine_data++;
+}
+
+void removeMedicine() {
+	int medID;
+	bool medFound = false;
+
+	while (!medFound) {
+		cout << "Enter the ID of the medicine you are willing to remove: ";
+		cin >> medID;
+
+		if (medID <= 0) {
+			cout << "Invalid ID.\n";
+			continue;
+		}
+
+
+		int i = 0;
+		while (medicines[i].ID != 0) {
+			if (medicines[i].ID == medID) {
+				medFound = true;
+				medicines[i].ID = -1;
+				cout << "Medicine with ID: " << medID << " has been removed.\n";
+				saveMedicineDataLocally();
+				break;
+			}
+			++i;
+
+
+		}
+
+		if (!medFound) {
+			cout << "Medicine not found.\n";
+		}
+	}
 }
 
 void editUserCredentials(int index)
@@ -1034,12 +1135,12 @@ void logOut()
 
 int main()
 {
-	dataForTestPurposes();
+	//dataForTestPurposes();
 	//saveAllDataLocally();
-	saveAllDataToArr();
+	loadAllDataToArr();
 	//signUp();
-	//logInInterface();
-
+	logInInterface();
+	//addMedicine();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
 	//showOrderReceipt(orders[0]);
@@ -1082,8 +1183,8 @@ int main()
 	}
 	*/
 	//manage_orders(orders);
-	string orr;
-	getline(cin , orr);
-	makeOrder(orr);
+	//string orr;
+	//getline(cin , orr);
+	//makeOrder(orr);
 	
 }
