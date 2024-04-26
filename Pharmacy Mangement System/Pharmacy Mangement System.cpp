@@ -108,6 +108,7 @@ void userPermissions();
 void adminPermissions();
 void addMedicine();
 void removeMedicine();
+void editMedicine();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
 void searchForMedicineByCategory();
@@ -303,6 +304,10 @@ void logInInterface()
 					addMedicine();
 				else if (chosenOption == 5)
 					removeMedicine();
+				else if (chosenOption == 6)
+				{
+					editMedicine();
+				}
 
 			}
 		}
@@ -333,15 +338,16 @@ void adminPermissions() {
 	cout << "3- Remove user\n";
 	cout << "4- Add new medicine\n";
 	cout << "5- Remove medicine\n";
-	cout << "6- Manage orders\n";
-	cout << "7- Manage payments\n";
-	cout << "8- Search for medicine by name\n";
-	cout << "9- Search for medicine by category\n";
-	cout << "10- Add order\n";
-	cout << "11- Choose payment method\n";
-	cout << "12- View order\n";
-	cout << "13- Request drug\n";
-	cout << "14- View all previous orders\n";
+	cout << "6- Edit medicine\n";
+	cout << "7- Manage orders\n";
+	cout << "8- Manage payments\n";
+	cout << "9- Search for medicine by name\n";
+	cout << "10- Search for medicine by category\n";
+	cout << "11- Add order\n";
+	cout << "12- Choose payment method\n";
+	cout << "13- View order\n";
+	cout << "14- Request drug\n";
+	cout << "15- View all previous orders\n";
 }
 
 void addMedicine() {
@@ -418,6 +424,69 @@ void removeMedicine() {
 			cout << "Medicine not found.\n";
 		}
 	}
+}
+
+void editMedicine() {
+	int index;
+	cout << "Enter the ID of the medicine that you'd love to change: ";
+	do {
+		cin >> index;
+		if (index > medicine_data)
+			cout << "There's no Medicine with such an ID\nRe-enter the ID of the medicine that you'd love to change: ";
+	} while (index > medicine_data);
+	cout << "What are you willing to change ?\n";
+	cout << "1- Price\n";
+	cout << "2- Name\n";
+	cout << "3- Description\n";
+	cout << "4- category\n";
+	cout << "5- concentration\n";
+	cout << "6- Quantity in stock\n";
+	int choice;
+	do {
+		cin >> choice;
+		if (choice == 1)
+		{
+			cout << "Enter the new price: ";
+			cin >> medicines[index-1].price;
+		}
+		else if (choice == 2)
+		{
+			cout << "Enter the new name: ";
+			cin >> medicines[index-1].name;
+		}
+		else if (choice == 3)
+		{
+			cout << "Enter the new description: ";
+			cin.ignore(1, '\n');
+			getline(cin, medicines[index-1].description);
+		}
+		else if (choice == 4)
+		{
+			cout << "Enter the new category: ";
+			cin.ignore(1, '\n');
+			getline(cin, medicines[index-1].category);
+		}
+		else if (choice == 5)
+		{
+			cout << "Enter the new concentration: ";
+			cin.ignore(1, '\n');
+			getline(cin, medicines[index-1].concentration);
+		}
+		else if (choice == 6)
+		{
+			cout << "Enter the new quantity in stock: ";
+			cin >> medicines[index-1].quantity_in_stock;
+			if (medicines[index - 1].quantity_in_stock == 0)
+				medicines[index - 1].availability = false;
+			else
+				medicines[index - 1].availability = true;
+		}
+		else
+		{
+			cout << "Invalid choice. Please enter a number from the numbers above (1-6).\n";
+		}
+	} while (choice > 6);
+	saveMedicineDataLocally();
 }
 
 void editUserCredentials(int index)
@@ -1139,7 +1208,8 @@ int main()
 	//saveAllDataLocally();
 	loadAllDataToArr();
 	//signUp();
-	logInInterface();
+	//logInInterface();
+	editMedicine();
 	//addMedicine();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
