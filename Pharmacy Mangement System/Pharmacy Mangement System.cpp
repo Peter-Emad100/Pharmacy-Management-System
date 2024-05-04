@@ -102,6 +102,8 @@ void dataForTestPurposes();
 bool isUsernameTaken(string username);
 bool isMedNameTaken(string MedName);
 void signUp();
+bool isValidEmail(string email);
+bool isValidPhone(string phone);
 bool validateUser(string username, string password, user& currentUser);
 void logInInterface();
 void userPermissions();
@@ -112,7 +114,7 @@ void editMedicine();
 void editUserCredentials(int index);
 bool searchForMedicineByName();
 void searchForMedicineByCategory();
-void makeOrder(string medicineIDS);
+void makeOrder(string medicineIDS, string quantity, int payment_method);
 void showOrderReceipt(order lastOrder,string current_time);
 void makeRequest(string _username, string _medicineName, int _amountReq);
 void showAllPreviousOrders();
@@ -122,6 +124,7 @@ void removeUser();
 void logOut();
 void managePaymentMethodes();
 void showPaymentMehtode(vector<string> x);
+void manageOrders(order orders[Size]);
 
 
 //**********Functions***********//
@@ -214,13 +217,29 @@ void signUp() {
 
 	cout << "Enter your password: ";
 	cin >> newUser.password;
+
 	cout << "Enter your e-mail: ";
-	cin >> newUser.email;
+	//To check the email if it's valid//
+	bool valid=true;
+	do {
+		cin >> newUser.email;
+		valid = isValidEmail(newUser.email);
+		if (!valid)
+			cout << "Invalid email. Please enter a valid email: ";
+	} while (!valid);
+	///////////////////////////////////
+
 	cout << "Enter your address: ";
 	cin.ignore(1, '\n');
 	getline(cin, newUser.address);
+
 	cout << "Enter your phone: ";
-	cin >> newUser.phone;
+	do {
+		cin >> newUser.phone;
+		valid = isValidPhone(newUser.phone);
+		if (!valid)
+			cout << "Invalid phone number. Please enter a valid phone number: ";
+	} while (!valid);
 
 	int roleChoice;
 	do {
@@ -244,6 +263,44 @@ void signUp() {
 	saveOneUserDataLocally();
 
 	user_data++;										 // Increment user_data to keep track of the total number of users
+}
+
+bool isValidEmail(string email) {
+	if ((email[0] <= 'a' && email[0] >= 'z') || (email[0] <= 'A' && email[0] >= 'Z')) //Checks if the first input a letter or no
+		return 0;
+	int countAt = 0, countDot = 0; //Counts the number of "at"s and dots
+	int at = -1, dot = -1;
+	for (int i = 0; i < email.size(); i++)
+	{
+		if (email[i] == '@')
+		{
+			countAt++;
+			at = i;
+		}
+		else if (email[i] == '.')
+		{
+			countDot++;
+			dot = i;
+		}
+	}
+		if (at == -1 || dot == -1) //Checks if there's an at and a dot
+			return 0;
+		if (at > dot) //Checks if there's an at after the dot
+			return 0;
+		if (countAt > 1 || countDot > 1) //Checks if there are more than one of them
+			return 0;
+		if (dot >= (email.size() - 1)) // Checks if the Dot is present at the end
+			return 0;
+		else
+			return 1;
+}
+
+bool isValidPhone(string phone) {
+	for (int i = 0; i < phone.size(); i++)
+	{
+		if ((phone[i] >= 'a' && phone[i] <= 'z') || (phone[i] >= 'A' && phone[i] <= 'Z')) //Checks if the first input a letter or no
+			return 0;
+	}
 }
 
 bool validateUser(string username, string password, user& currentUser)
@@ -286,30 +343,104 @@ void logInInterface()
 		cin >> currentUser.password;
 
 		if (validateUser(currentUser.username, currentUser.password, currentUser)) {
-
 			loggedIn = true;
-			cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
-
-
-			if (currentUser.his_role == user::User)
-			{
-				userPermissions();
-				cin >> chosenOption;
-			}
-			else
-			{
-				adminPermissions();
-				cin >> chosenOption;
-				if (chosenOption == 4)
-					addMedicine();
-				else if (chosenOption == 5)
-					removeMedicine();
-				else if (chosenOption == 6)
+			char again;
+			do {
+				system("cls");
+				cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
+				if (currentUser.his_role == user::User)
 				{
-					editMedicine();
+					userPermissions();
+					cin >> chosenOption;
+					if (chosenOption == 1 /*Search the medicine by its name*/)
+						searchForMedicineByName();
+					else if (chosenOption == 2 /*Search the medicine by its category*/)
+						searchForMedicineByCategory();
+					else if (chosenOption == 3 /* Make an order*/)
+					{
+						cout << "Enter the ID of different medicines separated by a space: ";
+						cin.ignore(1, '\n');
+						string MedID;
+						getline(cin, MedID);
+						cout << "Enter the number of each different medicines separated by a space: ";
+						cin.ignore(1, '\n');
+						string MedNum;
+						getline(cin, MedNum);
+						int PayMethod;
+						cout << "Enter the number of the payment method: ";
+						cin >> PayMethod;
+						makeOrder(MedID, MedNum, PayMethod);
+					}
+					else if (chosenOption == 4)
+					{
+						string medicineName;
+						int amountrequested;
+						cout << "Enter medicine name:\n";
+						cin >> medicineName;
+						cout << "Enter the amount you need:\n";
+						cin >> amountrequested;
+						makeRequest(currentUser.username, medicineName, amountrequested);
+					}
+					else if (chosenOption == 5)
+						showAllPreviousOrders();
+					else if (chosenOption == 6 /*Log out*/)
+						logOut();
+					else
+						cout << "Invalid number. Please enter a number from the given numbers above: ";
 				}
-
-			}
+				else
+				{
+					adminPermissions();
+					cin >> chosenOption;
+					if (chosenOption == 1)
+						signUp();
+					else if (chosenOption == 2)
+					{
+						cout << "Enter the ID of the user to edit: ";
+						int index;
+						cin >> index;
+						editUserCredentials(index);
+					}
+					else if (chosenOption == 3)
+						removeUser();
+					else if (chosenOption == 4)
+						addMedicine();
+					else if (chosenOption == 5)
+						removeMedicine();
+					else if (chosenOption == 6)
+						editMedicine();
+					else if (chosenOption == 7)
+						manageOrders(orders);
+					else if (chosenOption == 8)
+						managePaymentMethodes();
+					else if (chosenOption == 9 /**/)
+						searchForMedicineByName();
+					else if (chosenOption == 10)
+						searchForMedicineByCategory();
+					else if (chosenOption == 11 /*Request drug*/)
+					{
+						string medicineName;
+						int amountrequested;
+						cout << "Enter medicine name:\n";
+						cin >> medicineName;
+						cout << "Enter the amount you need:\n";
+						cin >> amountrequested;
+						makeRequest(currentUser.username, medicineName, amountrequested);
+					}
+					else if (chosenOption == 12)
+						showAllPreviousOrders();
+					else if (chosenOption == 13)
+						logOut();
+					else
+						cout << "Invalid number. Please enter a number from the given numbers above: ";
+				}
+				do{
+					cout << "Do you want to make another operations? (y/n)\n";
+					cin >> again;
+					if (again != 'y' && again != 'n')
+						cout << "Invalid character. Please Enter a valid character (y for yes/n for no)\n";
+				} while (again != 'y' && again != 'n');
+			} while (again == 'y');
 		}
 
 
@@ -321,15 +452,21 @@ void logInInterface()
 	}
 }
 
+void checkContinue() {
+	cout << "Do you want to continue? (y for Yes / n for No)\n";
+	char letter;
+	cin >> letter;
+	if (letter == 'y');
+		
+}
+
 void userPermissions() {
 	cout << "1- Search for medicine by name\n";
 	cout << "2- Search for medicine by category\n";
 	cout << "3- Add order\n";
-	cout << "4- Choose payment method\n";
-	cout << "5- View order\n";
-	cout << "6- Request drug\n";
-	cout << "7- View all previous orders\n";
-	cout << "8- Log out\n";
+	cout << "4- Request drug\n";
+	cout << "5- View all previous orders\n";
+	cout << "6- Log out\n";
 }
 
 void adminPermissions() {
@@ -343,11 +480,9 @@ void adminPermissions() {
 	cout << "8- Manage payments\n";
 	cout << "9- Search for medicine by name\n";
 	cout << "10- Search for medicine by category\n";
-	cout << "11- Add order\n";
-	cout << "12- Choose payment method\n";
-	cout << "13- View order\n";
-	cout << "14- Request drug\n";
-	cout << "15- View all previous orders\n";
+	cout << "11- Request drug\n";
+	cout << "12- View all previous orders\n";
+	cout << "13- Log out\n";
 }
 
 void addMedicine() {
@@ -565,12 +700,12 @@ void searchForMedicineByCategory() {
 	if (found == false) {
 		cout << "there is no medicine meet this category\n";
 		int ifwant;
-		string medicineName;
-		int amountrequested;
 		cout << "Want to make a request?choose(any number for yes/ 0 for no)" << endl;
 		cin >> ifwant;
 		if (ifwant != 0)
 		{
+			string medicineName;
+			int amountrequested;
 			cout << "Enter medicine name:\n";
 			cin >> medicineName;
 			cout << "Enter the amount you need:\n";
@@ -605,21 +740,27 @@ int dateDifference(const std::string& date1, const std::string& date2) {
 	return difference;
 }
 
-void makeOrder(string medicineIDS) {
+void makeOrder(string medicineIDS, string quantity, int payment_method) {
 	// this function might take some time to be understood ... 
 	// i tried my best to make it more understandable with comments
 	//Good Luck
 	order lastyorder = {};
-	int length = medicineIDS.size();
+	int length_medicines = medicineIDS.size();
+	int length_quantity = quantity.size();
 	int first_space_pos = -1, second_space_pos = -1;
+	int first_space_pos_quan = -1, second_space_pos_quan = -1;
+	int quantity_arr[11] = {};
+	int pay_num = 2000;
 	int j = 0;
 	bool error_format = false;
 	bool error_id = false;
+	bool quantity_problem = false;
+	bool pay_in_range = false;
 	string current_time;
-	// simple general try and catch code because this can execute some exception dependent on user input format
-	try{
-	// a loop to split string input into medicine id array
-		for (int i = 0; i < length + 1; i++) {
+	// simple general try and catch code because this can execute some exceptions dependent on user input format
+	try {
+		// a loop to split string input into medicine id array
+		for (int i = 0; i < length_medicines + 1; i++) {
 			if (medicineIDS[i] == ' ' || medicineIDS[i] == '\0') {
 				first_space_pos = second_space_pos + 1;
 				second_space_pos = i;
@@ -629,7 +770,31 @@ void makeOrder(string medicineIDS) {
 		}
 	}
 	catch (...) {
-		cout << "your input is in a wrong format ... this order will not be excuted" << endl;
+		cout << "medicine ids is in a wrong format ... this order will not be excuted" << endl;
+		error_format = true;
+	}
+	j = 0;
+	// simple general try and catch code because this can execute some exception dependent on user input format
+	try {
+		// a loop to split string input into quantity array
+		for (int i = 0; i < length_quantity + 1; i++) {
+			if (quantity[i] == ' ' || quantity[i] == '\0') {
+				first_space_pos_quan = second_space_pos_quan + 1;
+				second_space_pos_quan = i;
+				quantity_arr[j] = stoi(quantity.substr(first_space_pos_quan, (second_space_pos_quan - first_space_pos_quan)));
+				j++;
+			}
+		}
+	}
+	catch (...) {
+		cout << "quantities is in a wrong format ... this order will not be excuted" << endl;
+		error_format = true;
+	}
+	try {
+		pay_num = payment_method;
+	}
+	catch (...) {
+		cout << "payment method is in a wrong format ... this order will not be excuted" << endl;
 		error_format = true;
 	}
 	// the order will be done only if the input was in the right format
@@ -637,11 +802,16 @@ void makeOrder(string medicineIDS) {
 		int x = 0;
 		bool found = false;
 		while (x != 10 && lastyorder.medicine_ID[x] != 0) {
-			 found = false;
+			found = false;
 			for (int k = 0; medicines[k].ID != 0; k++) {
 				if (medicines[k].ID == lastyorder.medicine_ID[x]) {
-					lastyorder.totalPrice += medicines[k].price;
-					found = true; 
+					if (medicines[k].quantity_in_stock >= quantity_arr[x]) {
+						lastyorder.totalPrice += medicines[k].price * quantity_arr[x];
+						found = true;
+					}
+					else {
+						quantity_problem = true;
+					}
 				}
 			}
 			if (found == false) {
@@ -649,29 +819,56 @@ void makeOrder(string medicineIDS) {
 			}
 			x++;
 		}
+		//check if payment method in range
+		if (pay_num <= paymentMethods.size() && pay_num > 0) {
+			pay_in_range = true;
+		}
+		//quantity will decrease only if there is no error detected
+		if (quantity_problem == false && error_format == false && quantity_problem == false && pay_in_range == true) {
+			x = 0;
+			while (x != 10 && lastyorder.medicine_ID[x] != 0) {
+				for (int k = 0; medicines[k].ID != 0; k++) {
+					if (medicines[k].ID == lastyorder.medicine_ID[x]) {
+						medicines[k].quantity_in_stock -= quantity_arr[x];
+					}
+				}
+				x++;
+			}
+			lastyorder.userID = currentUser.ID;
+			time_t t = time(0); // Get time now
+			tm now;
+			localtime_s(&now, &t);
+			lastyorder.orderDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
+			lastyorder.orderState = 0;
+			lastyorder.shipDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
+			current_time = to_string(now.tm_hour) + ':' + to_string(now.tm_min) + ':' + to_string(now.tm_sec);
 
-		lastyorder.userID = currentUser.ID;
-		time_t t = time(0); // Get time now
-		tm now;
-		localtime_s(&now, &t);
-		lastyorder.orderDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
-		lastyorder.orderState = 0;
-		lastyorder.shipDate = to_string(now.tm_year + 1900) + '-' + to_string(now.tm_mon + 1) + '-' + to_string(now.tm_mday);
-		current_time = to_string(now.tm_hour) + ':' + to_string(now.tm_min) + ':' + to_string(now.tm_sec);
-
+		}
+		//order will be cleared if a medicine id is wrong
+		if (error_id == true) {
+			cout << "you entered a wrong id , your order will not be excuted" << endl;
+			lastyorder = {};
+			current_time = "";
+		}
+		//order will be cleared if we don't have the quantity needed
+		if (quantity_problem) {
+			cout << "you entered unavailable quantity , your order will not be excuted" << endl;
+			lastyorder = {};
+			current_time = "";
+		}
+		if (pay_in_range == false) {
+			cout << "wrong payment method, your order will not be excuted" << endl;
+			lastyorder = {};
+			current_time = "";
+		}
+		//order will be saved if there isn't a single error
+		if (error_id == false && error_format == false && quantity_problem == false) {
+			int i = 0;
+			for (i; orders[i].orderID != 0; i++);
+			orders[i] = lastyorder;
+		}
+		showOrderReceipt(lastyorder, current_time);
 	}
-	//order will only be saved or excuted if all ids are right
-	if (error_id == true) {
-		cout << "you entered a wrong id , your order will not be excuted" << endl;
-		lastyorder = {};
-		current_time = "";
-	}
-	if(error_id==false && error_format==false) {
-		int i = 0;
-		for (i; orders[i].orderID != 0; i++);
-		orders[i] = lastyorder;
-	}
-	showOrderReceipt(lastyorder, current_time);
 }
 
 void showOrderReceipt(order lastOrder , string current_time) {
@@ -1098,7 +1295,7 @@ void trackorder(order orders[])
 	}
 
 }
-void manage_orders(order orders[Size]) {
+void manageOrders(order orders[Size]) {
 	int ID, indx;
 	bool found = 0;
 	cout << "Enter the orders's ID: ";
@@ -1199,17 +1396,14 @@ void manage_orders(order orders[Size]) {
 
 void logOut()
 {
+	system("cls");
 	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
 }
 
 int main()
 {
-	//dataForTestPurposes();
-	//saveAllDataLocally();
 	loadAllDataToArr();
-	//signUp();
-	//logInInterface();
-	editMedicine();
+	logInInterface();
 	//addMedicine();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
