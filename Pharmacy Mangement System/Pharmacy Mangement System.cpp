@@ -98,6 +98,7 @@ struct request {
 request requests[15];
 
 //********Function Declares***********//
+void mainInterface();
 void dataForTestPurposes();
 bool isUsernameTaken(string username);
 bool isMedNameTaken(string MedName);
@@ -108,6 +109,7 @@ bool validateUser(string username, string password, user& currentUser);
 void logInInterface();
 void userPermissions();
 void adminPermissions();
+void warningStock();
 void addMedicine();
 void removeMedicine();
 void editMedicine();
@@ -128,6 +130,32 @@ void manageOrders(order orders[Size]);
 
 
 //**********Functions***********//
+
+void mainInterface() {
+	system("cls");
+	cout << "             =======================             \n";
+	cout << "             |   Pharmacy System   |              \n";
+	cout << "====================================================\n";
+	cout << "Choose one of the following option\n";
+	cout << "1) Login to the system\t 2) SignUp \n";
+	cout << "(Enter 0 if you want to exit the system)\n";
+	cout << "Option: ";
+	int option;
+	do{
+		cin>>option;
+		if (option > 2 || option < 0)
+		{
+			cout << "Invalid number. Please enter a number from the numbers above: ";
+			continue;
+		}
+	} while (option > 2 || option < 0);
+	if (option == 1)
+		logInInterface();
+	else if (option == 2)
+		signUp();
+	else
+		exit(0);
+}
 
 void dataForTestPurposes() {
 
@@ -263,6 +291,17 @@ void signUp() {
 	saveOneUserDataLocally();
 
 	user_data++;										 // Increment user_data to keep track of the total number of users
+	char again;
+	do {
+		cout << "Do you want to make another operations? (y/n)\n";
+		cin >> again;
+		if (again != 'y' && again != 'n')
+			cout << "Invalid character. Please Enter a valid character (y for yes/n for no)\n";
+		else if (again == 'y')
+			mainInterface();
+		else
+			exit(0);
+	} while (again != 'y' && again != 'n');
 }
 
 bool isValidEmail(string email) {
@@ -344,96 +383,111 @@ void logInInterface()
 
 		if (validateUser(currentUser.username, currentUser.password, currentUser)) {
 			loggedIn = true;
+			bool adminFirstTime = true;
 			char again;
 			do {
 				system("cls");
+				cout << "             ============================             \n";
+				cout << "             |   Pharmacy System Menu   |              \n";
+				cout << "========================================================\n";
 				cout << "Log in success. Welcome back, " << currentUser.username << " :D\n-------------------------------------------\n";
 				if (currentUser.his_role == user::User)
 				{
 					userPermissions();
-					cin >> chosenOption;
-					if (chosenOption == 1 /*Search the medicine by its name*/)
-						searchForMedicineByName();
-					else if (chosenOption == 2 /*Search the medicine by its category*/)
-						searchForMedicineByCategory();
-					else if (chosenOption == 3 /* Make an order*/)
-					{
-						cout << "Enter the ID of different medicines separated by a space: ";
-						cin.ignore(1, '\n');
-						string MedID;
-						getline(cin, MedID);
-						cout << "Enter the number of each different medicines separated by a space: ";
-						cin.ignore(1, '\n');
-						string MedNum;
-						getline(cin, MedNum);
-						int PayMethod;
-						cout << "Enter the number of the payment method: ";
-						cin >> PayMethod;
-						makeOrder(MedID, MedNum, PayMethod);
-					}
-					else if (chosenOption == 4)
-					{
-						string medicineName;
-						int amountrequested;
-						cout << "Enter medicine name:\n";
-						cin >> medicineName;
-						cout << "Enter the amount you need:\n";
-						cin >> amountrequested;
-						makeRequest(currentUser.username, medicineName, amountrequested);
-					}
-					else if (chosenOption == 5)
-						showAllPreviousOrders();
-					else if (chosenOption == 6 /*Log out*/)
-						logOut();
-					else
-						cout << "Invalid number. Please enter a number from the given numbers above: ";
+					cout << "-------------------------------------------\n";
+					do{
+						cout << "Option: ";
+						cin >> chosenOption;
+						if (chosenOption == 1 /*Search the medicine by its name*/)
+							searchForMedicineByName();
+						else if (chosenOption == 2 /*Search the medicine by its category*/)
+							searchForMedicineByCategory();
+						else if (chosenOption == 3 /* Make an order*/)
+						{
+							cout << "Enter the ID of different medicines separated by a space: ";
+							cin.ignore(1, '\n');
+							string MedID;
+							getline(cin, MedID);
+							cout << "Enter the number of each different medicines separated by a space: ";
+							cin.ignore(1, '\n');
+							string MedNum;
+							getline(cin, MedNum);
+							int PayMethod;
+							cout << "Enter the number of the payment method: ";
+							cin >> PayMethod;
+							makeOrder(MedID, MedNum, PayMethod);
+						}
+						else if (chosenOption == 4)
+						{
+							string medicineName;
+							int amountrequested;
+							cout << "Enter medicine name:\n";
+							cin >> medicineName;
+							cout << "Enter the amount you need:\n";
+							cin >> amountrequested;
+							makeRequest(currentUser.username, medicineName, amountrequested);
+						}
+						else if (chosenOption == 5)
+							showAllPreviousOrders();
+						else if (chosenOption == 6 /*Log out*/)
+							logOut();
+						else
+							cout << "Invalid number. Please enter a number from the given numbers above: ";
+					}while (chosenOption > 6 || chosenOption < 0);
 				}
 				else
 				{
 					adminPermissions();
-					cin >> chosenOption;
-					if (chosenOption == 1)
-						signUp();
-					else if (chosenOption == 2)
-					{
-						cout << "Enter the ID of the user to edit: ";
-						int index;
-						cin >> index;
-						editUserCredentials(index);
-					}
-					else if (chosenOption == 3)
-						removeUser();
-					else if (chosenOption == 4)
-						addMedicine();
-					else if (chosenOption == 5)
-						removeMedicine();
-					else if (chosenOption == 6)
-						editMedicine();
-					else if (chosenOption == 7)
-						manageOrders(orders);
-					else if (chosenOption == 8)
-						managePaymentMethodes();
-					else if (chosenOption == 9 /**/)
-						searchForMedicineByName();
-					else if (chosenOption == 10)
-						searchForMedicineByCategory();
-					else if (chosenOption == 11 /*Request drug*/)
-					{
-						string medicineName;
-						int amountrequested;
-						cout << "Enter medicine name:\n";
-						cin >> medicineName;
-						cout << "Enter the amount you need:\n";
-						cin >> amountrequested;
-						makeRequest(currentUser.username, medicineName, amountrequested);
-					}
-					else if (chosenOption == 12)
-						showAllPreviousOrders();
-					else if (chosenOption == 13)
-						logOut();
-					else
-						cout << "Invalid number. Please enter a number from the given numbers above: ";
+					cout << "-------------------------------------------\n";
+					if (adminFirstTime)
+						warningStock();
+					cout << "Option: ";
+					do{
+						cin >> chosenOption;
+						if (chosenOption == 1)
+							addUser();
+						else if (chosenOption == 2)
+						{
+							cout << "Enter the ID of the user to edit: ";
+							int index;
+							cin >> index;
+							editUserCredentials(index);
+						}
+						else if (chosenOption == 3)
+							removeUser();
+						else if (chosenOption == 4)
+							addMedicine();
+						else if (chosenOption == 5)
+							removeMedicine();
+						else if (chosenOption == 6)
+							editMedicine();
+						else if (chosenOption == 7)
+							manageOrders(orders);
+						else if (chosenOption == 8)
+							managePaymentMethodes();
+						else if (chosenOption == 9 /**/)
+							searchForMedicineByName();
+						else if (chosenOption == 10)
+							searchForMedicineByCategory();
+						else if (chosenOption == 11 /*Request drug*/)
+						{
+							string medicineName;
+							int amountrequested;
+							cout << "Enter medicine name:\n";
+							cin >> medicineName;
+							cout << "Enter the amount you need:\n";
+							cin >> amountrequested;
+							makeRequest(currentUser.username, medicineName, amountrequested);
+						}
+						else if (chosenOption == 12)
+							showAllPreviousOrders();
+						else if (chosenOption == 13)
+							logOut();
+						else
+							cout << "Invalid number. Please enter a number from the given numbers above: ";
+					}while (chosenOption > 13 || chosenOption < 0);
 				}
+				adminFirstTime = false;
 				do{
 					cout << "Do you want to make another operations? (y/n)\n";
 					cin >> again;
@@ -483,6 +537,14 @@ void adminPermissions() {
 	cout << "11- Request drug\n";
 	cout << "12- View all previous orders\n";
 	cout << "13- Log out\n";
+}
+
+void warningStock() {
+	for (int i = 0; i < medicine_data; i++)
+	{
+		if (medicines[i].quantity_in_stock <= 0)
+			cout << "Warning! We have shortage of " << medicines[i].name << " as we have " << medicines[i].quantity_in_stock << " From it!\n";
+	}
 }
 
 void addMedicine() {
@@ -1064,13 +1126,28 @@ void addUser()
 
 	cout << "Password: ";
 	cin >> newUser.password;
-	cout << "E-mail: ";
-	cin >> newUser.email;
-	cout << "Address: ";
+	cout << "Enter your e-mail: ";
+	//To check the email if it's valid//
+	bool valid = true;
+	do {
+		cin >> newUser.email;
+		valid = isValidEmail(newUser.email);
+		if (!valid)
+			cout << "Invalid email. Please enter a valid email: ";
+	} while (!valid);
+	///////////////////////////////////
+
+	cout << "Enter your address: ";
 	cin.ignore(1, '\n');
 	getline(cin, newUser.address);
-	cout << "Phone Number: ";
-	cin >> newUser.phone;
+
+	cout << "Enter your phone: ";
+	do {
+		cin >> newUser.phone;
+		valid = isValidPhone(newUser.phone);
+		if (!valid)
+			cout << "Invalid phone number. Please enter a valid phone number: ";
+	} while (!valid);
 
 	int roleChoice;
 
@@ -1397,13 +1474,14 @@ void manageOrders(order orders[Size]) {
 void logOut()
 {
 	system("cls");
-	logInInterface(); //Basically, just open the log in interface again if you are willing to log out 
+	mainInterface(); //Basically, just open the main interface again if you are willing to log out 
 }
 
 int main()
 {
 	loadAllDataToArr();
-	logInInterface();
+	mainInterface();
+	return 0;
 	//addMedicine();
 	//int orderTime = dateDifference("2024-03-27", "2024-05-27");
 	//makeOrder(users[1].ID, "2024-03-27", "2024-05-27", orderTime, medicines);
