@@ -63,7 +63,7 @@ extern request requests[15];
 
 void saveMedicineDataLocally() {
 	fstream file;
-	file.open("MedicineData.csv", ios::out);
+	file.open("Data/MedicineData.csv", ios::out);
 	if (file.is_open())
 	{
 		file << "sep=|\n";
@@ -87,7 +87,7 @@ void saveMedicineDataLocally() {
 void savePayMethodeLocally()
 {
 	fstream file;
-	file.open("payMethode.txt", ios::out);
+	file.open("Data/payMethode.txt", ios::out);
 	if (file.is_open())
 	{
 		for (auto it = paymentMethods.begin(); it != paymentMethods.end(); ++it)
@@ -104,7 +104,7 @@ void savePayMethodeLocally()
 }
 void saveUserDataLocally() {
 	fstream file;
-	file.open("UserData.csv", ios::out);
+	file.open("Data/UserData.csv", ios::out);
 	if (file.is_open())
 	{
 		file << "sep=|\n";
@@ -127,15 +127,17 @@ void saveUserDataLocally() {
 void saveRequestsDataLocally()
 {
 	ofstream file;
-	file.open("RequestsData.txt", ios::app);
+	file.open("Data/RequestsData.csv", ios::out);
 	if (file.is_open())
 	{
-		file << "User ID" << " | " << "Medicine Name" << " | " << "Amount Requested\n";
+		file << "sep=|\n";
+		file << "User ID" << "|" << "Medicine Name" << "|" << "Amount Requested\n";
 		for (int i = 0; i < requestcounter; i++)
 		{
-			file << requests[i].userID << "       |";
-			file << requests[i].medicineName << "      |";
-			file << requests[i].amountNeeded << "        \n";
+			file << requests[i].userID << '|';
+			file << requests[i].medicineName << '|';
+			file << requests[i].amountNeeded;
+			file << '\n';
 
 		}
 		file.close();
@@ -151,7 +153,7 @@ void saveAllDataLocally() {
 
 void loadMedicineDataToArr() {
 	fstream file;
-	file.open("MedicineData.csv", ios::in);
+	file.open("Data/MedicineData.csv", ios::in);
 	if (file.is_open())
 	{
 		string data;
@@ -195,7 +197,7 @@ void loadMedicineDataToArr() {
 
 void loadUserDataToArr() {
 	fstream file;
-	file.open("UserData.csv", ios::in);
+	file.open("Data/UserData.csv", ios::in);
 	if (file.is_open())
 	{
 		string data;
@@ -236,7 +238,7 @@ void loadUserDataToArr() {
 void loadPayMethodeToVec()
 {
 	fstream file;
-	file.open("payMethode.txt", ios::in);
+	file.open("Data/payMethode.csv", ios::in);
 	if (file.is_open())
 	{
 		string line;
@@ -257,7 +259,7 @@ void loadAllDataToArr() {
 
 void saveOneUserDataLocally() {
 	fstream file;
-	file.open("UserData.csv", ios::app);
+	file.open("Data/UserData.csv", ios::app);
 	if (file.is_open())
 	{
 		file << users[user_data].username << '|';
@@ -274,7 +276,7 @@ void saveOneUserDataLocally() {
 
 void saveOneMedDataLocally() {
 	fstream file;
-	file.open("MedicineData.csv", ios::app);
+	file.open("Data/MedicineData.csv", ios::app);
 	if (file.is_open())
 	{
 		file << medicines[medicine_data].ID << '|';

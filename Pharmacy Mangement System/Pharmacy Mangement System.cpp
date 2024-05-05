@@ -742,10 +742,16 @@ bool searchForMedicineByName() {
 		return 1;
 	}
 	else {
-		int amountrequested;
-		cout << "Enter the amount you need:\n";
-		cin >> amountrequested;
-		makeRequest(currentUser.username, name, amountrequested);
+		cout << "there is no medicine meet this name\n";
+		int ifwant;
+		cout << "Want to make a request?\nType the number of required medicines (Enter 0 to cancel)\n" << endl;
+		cin >> ifwant;
+		if (ifwant != 0)
+		{
+			string& medicineName = name; //Simply gets the entered name of the medicine above and we couldn't find it
+			int& amountrequested = ifwant; //Simply gets the entered number of medicine above
+			makeRequest(currentUser.username, name, amountrequested);
+		}
 	}
 }
 
@@ -948,7 +954,6 @@ void showOrderReceipt(order lastOrder , string current_time) {
 
 void makeRequest(string _username, string _medicineName, int _amountReq)
 {
-	_username = currentUser.username;
 	int response;
 	cout << "Confirm the request? choose (1 for yes / 0 for no): " << endl;
 	cin >> response;
@@ -960,6 +965,7 @@ void makeRequest(string _username, string _medicineName, int _amountReq)
 			if (_username == users[i].username)
 			{
 				currentUser.ID = users[i].ID;
+				break;
 			}
 		}
 		for (int j = 0; j < 15; j++)
@@ -972,6 +978,7 @@ void makeRequest(string _username, string _medicineName, int _amountReq)
 				break;
 			}
 		}
+		saveRequestsDataLocally();
 	}
 }
 
