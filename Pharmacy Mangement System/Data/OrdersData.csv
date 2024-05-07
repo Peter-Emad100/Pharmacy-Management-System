@@ -1,0 +1,4 @@
+sep=|
+Order ID|User ID|Order Date|Medicine IDs|Total Price|Ship Date|Order State
+1|1|2024-03-27|1,2,3,0,|500|2024-03-27|0
+2|2|2024-03-28|4,5,0,|300|2024-03-28|1

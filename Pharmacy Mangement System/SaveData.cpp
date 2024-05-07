@@ -10,7 +10,7 @@ extern const int Size = 100;
 extern int medicine_data;
 extern int user_data;
 extern int requestcounter;
-
+extern int OrderCounter;
 struct medicine {
 	int ID;
 	string name;
@@ -54,6 +54,32 @@ struct user {
 };
 extern user users[Size];
 
+struct order {
+	int userID;
+	string orderDate;
+	int orderID;
+	bool orderState = false;
+	int medicine_ID[10] = {};
+	float totalPrice;
+
+	string shipDate;
+	void initialize(int _id, string _orderDate, int _medicine_ID[], float _Price, string _shipDate, int order_id, bool order_state) {
+		userID = _id;
+		orderDate = _orderDate;
+		totalPrice = _Price;
+		shipDate = _shipDate;
+		orderID = order_id;
+		orderState = order_state;
+		int i = 0;
+		while (_medicine_ID[i] != 0) {
+			medicine_ID[i] = _medicine_ID[i];
+			i++;
+		}
+
+	}
+};
+extern order orders[Size];
+
 struct request {
 	int userID;
 	string medicineName;
@@ -83,11 +109,10 @@ void saveMedicineDataLocally() {
 		file.close();
 	}
 }
-
-void savePayMethodeLocally()
+void savePayMethodLocally()
 {
 	fstream file;
-	file.open("Data/payMethode.txt", ios::out);
+	file.open("Data/payMethod.csv", ios::out);
 	if (file.is_open())
 	{
 		for (auto it = paymentMethods.begin(); it != paymentMethods.end(); ++it)
@@ -123,7 +148,6 @@ void saveUserDataLocally() {
 		file.close();
 	}
 }
-
 void saveRequestsDataLocally()
 {
 	ofstream file;
@@ -143,12 +167,42 @@ void saveRequestsDataLocally()
 		file.close();
 	}
 }
+void saveOrderDataLocally() {
+	ofstream file;
+	file.open("Data/OrdersData.csv", ios::out);
+	if (file.is_open())
+	{
+		file << "sep=|\n";
+		file << "Order ID" << "|" << "User ID" << "|" << "Order Date"<<'|'<<"Medicine IDs"<<'|'<<"Total Price" << '|' << "Ship Date" << '|'<<"Order State\n";
+		for (int i = 0; i < OrderCounter; i++)
+		{
+			file << orders[i].orderID << '|';
+			file << orders[i].userID << '|';
+			file << orders[i].orderDate << '|';
+			for (int j = 0; j < 9; j++)
+			{
+				file << orders[i].medicine_ID[j]<<',';
+				if (orders[i].medicine_ID[j] == 0)
+				{
+					break;
+				}
+			}
+			file << '|';
+			file << orders[i].totalPrice << '|';
+			file << orders[i].shipDate << '|';
+			file << orders[i].orderState;
+			file << '\n';
 
+		}
+		file.close();
+	}
+}
 void saveAllDataLocally() {
 	saveMedicineDataLocally();
 	saveUserDataLocally();
 	saveRequestsDataLocally();
-	savePayMethodeLocally();
+	savePayMethodLocally();
+	saveOrderDataLocally();
 }
 
 void loadMedicineDataToArr() {
@@ -194,7 +248,6 @@ void loadMedicineDataToArr() {
 		file.close();
 	}
 }
-
 void loadUserDataToArr() {
 	fstream file;
 	file.open("Data/UserData.csv", ios::in);
@@ -234,11 +287,10 @@ void loadUserDataToArr() {
 		file.close();
 	}
 }
-
-void loadPayMethodeToVec()
+void loadPayMethodToVec()
 {
 	fstream file;
-	file.open("Data/payMethode.csv", ios::in);
+	file.open("Data/payMethod.csv", ios::in);
 	if (file.is_open())
 	{
 		string line;
@@ -250,11 +302,53 @@ void loadPayMethodeToVec()
 		file.close();
 	}
 }
-
+void loadOrderDataToArr() {
+	fstream file;
+	file.open("Data/OrdersData.csv", ios::in);
+	if (file.is_open())
+	{
+		string data;
+		getline(file, data);                  //Skips a data
+		getline(file, data);                  //Skips a data
+		for (int i = 0; getline(file, data, '|'); i++)
+		{
+			orders[i].orderID = stoi(data);
+			//cout << medicines[i].ID << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			orders[i].userID = stoi(data);
+			//cout << medicines[i].name << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			orders[i].orderDate = data;
+			//cout << medicines[i].category << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			for (int j = 0; getline(file, data, ','); j++)
+			{
+				if (!stoi(data))
+					break;
+				orders[i].medicine_ID[j] = stoi(data);
+			}
+			getline(file, data, '|');                               //Skips a |
+			//cout << medicines[i].description << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			orders[i].totalPrice = stoi(data);
+			//cout << medicines[i].concentration << '\n';         //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data, '|');
+			orders[i].shipDate = data;
+			//cout << medicines[i].quantity_in_stock << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			getline(file, data);
+			orders[i].orderState = stoi(data);
+			//cout << medicines[i].availability << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			//cout << medicines[i].price << '\n' << '\n';             //Testing the outcomes. Best to keep here, so don't delete//
+			OrderCounter++;
+		}
+	//cout << endl << medicine_data;
+	file.close();
+	}
+}
 void loadAllDataToArr() {
 	loadMedicineDataToArr();
 	loadUserDataToArr();
-	loadPayMethodeToVec();
+	loadPayMethodToVec();
+	loadOrderDataToArr();
 }
 
 void saveOneUserDataLocally() {
@@ -273,7 +367,6 @@ void saveOneUserDataLocally() {
 	}
 	file.close();
 }
-
 void saveOneMedDataLocally() {
 	fstream file;
 	file.open("Data/MedicineData.csv", ios::app);

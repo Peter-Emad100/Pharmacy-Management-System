@@ -17,6 +17,7 @@ const int Size = 100;
 int medicine_data = 0;
 int user_data = 0;
 int requestcounter = 0;
+int OrderCounter = 0;
 int chosenOption; // variable to choose with which order you want to go through after log in
 
 struct medicine {
@@ -124,8 +125,10 @@ void addUser();
 void updateUser();
 void removeUser();
 void logOut();
-void managePaymentMethodes();
+void managePaymentMethods();
 void showPaymentMehtode(vector<string> x);
+void addPayment();
+void removePayment();
 void manageOrders(order orders[Size]);
 
 
@@ -154,7 +157,10 @@ void mainInterface() {
 	else if (option == 2)
 		signUp();
 	else
+	{
+		saveAllDataLocally();
 		exit(0);
+	}
 }
 
 void dataForTestPurposes() {
@@ -413,7 +419,9 @@ void logInInterface()
 							string MedNum;
 							getline(cin, MedNum);
 							int PayMethod;
-							cout << "Enter the number of the payment method: ";
+							cout << "Enter the number of the payment method: \n";
+							showPaymentMehtode(paymentMethods);
+							cout << "Payment method no. : ";
 							cin >> PayMethod;
 							makeOrder(MedID, MedNum, PayMethod);
 						}
@@ -464,7 +472,7 @@ void logInInterface()
 						else if (chosenOption == 7)
 							manageOrders(orders);
 						else if (chosenOption == 8)
-							managePaymentMethodes();
+							managePaymentMethods();
 						else if (chosenOption == 9 /**/)
 							searchForMedicineByName();
 						else if (chosenOption == 10)
@@ -1046,11 +1054,11 @@ void showPaymentMehtode(vector<string> x)
 		cout << "[" << c << "] " << *it << endl;
 		c++;
 	}
+	cout << '\n';
 }
-void managePaymentMethodes()
+void managePaymentMethods()
 {
-	vector<string>::iterator it = paymentMethods.begin();
-	char chooseP;
+	int chooseP;
 
 	int m = 0;
 	while (true)
@@ -1059,13 +1067,13 @@ void managePaymentMethodes()
 		{
 			cout << "invalid input try again from the list given : \n";
 		}
-		cout << "Edit payment methodes : " << "\n";
-		cout << "[1] show existed payment methodes\n";
-		cout << "[2] add new payment methode      \n";
-		cout << "[3] delete payment methode       \n";
+		cout << "Edit payment methods : " << "\n";
+		cout << "[1] show existed payment methods\n";
+		cout << "[2] add new payment method      \n";
+		cout << "[3] delete payment method       \n";
 		cout << "choose from the above : "; cin >> chooseP;
 		m++;
-		if (chooseP >= '1' && chooseP <= '3')
+		if (chooseP >= 1 && chooseP <= 3)
 		{
 			break;
 		}
@@ -1075,42 +1083,102 @@ void managePaymentMethodes()
 
 	switch (chooseP)
 	{
-	case '1':
-	{
-		system("cls");
-		cout << "=== payment methodes available now are === \n";
-		showPaymentMehtode(paymentMethods);
-		break;
+		case 1:
+		{
+			system("cls");
+			cout << "=== payment methods available now are === \n";
+			showPaymentMehtode(paymentMethods);
+			cout << "Do you want to add or delete an option?  \n";
+			cout << "1) Add a new paymethod\t 2)Delete a paymethod\n (Enter 0 if the answer is no)\n";
+			cout << "Option no. :";
+			do {
+				cin >> chooseP;
+				if (chooseP == 1)
+					addPayment();
+				else if (chooseP == 2)
+					removePayment();
+				else if (chooseP == 0)
+					return;
+				else
+				{
+					cout << "Ivalid number. Please enter a number from the options above :";
+				}
+			} while (chooseP < 0 || chooseP>2);
+			break;
+		}
+		case 2:
+		{
+			addPayment();
+			break;
+		}
+		case 3:
+		{
+			removePayment();
+			break;
+		}
 	}
-	case '2':
-	{
-		system("cls");
-		string newMethode;
-		cout << "=== Adding new Payment methode ===\n";
-		cout << "insert method's name: ";
-		cin.ignore(1, '\n');
-		getline(cin, newMethode, '\n');
-		cout << "methode now available are: \n";
-		paymentMethods.push_back(newMethode);
-		showPaymentMehtode(paymentMethods);
-		savePayMethodeLocally();
-		break;
-	}
-	case '3':
-	{
-		system("cls");
-		int chooseD;
-		cout << "\n=== delete payment methode ===\n";
-		showPaymentMehtode(paymentMethods);
-		cout << "\nchoose methode to delete from the given list: "; cin >> chooseD;
-		*it = chooseD - 1;
-		paymentMethods.erase(it, it + 1);
-		cout << "methodes available now is : \n\n";
-		showPaymentMehtode(paymentMethods);
-		savePayMethodeLocally();
-	}
+}
 
-	}
+void addPayment() {
+	system("cls");
+	string newMethod;
+	cout << "=== Adding new Payment method ===\n";
+	cout << "insert method's name: ";
+	cin.ignore(1, '\n');
+	getline(cin, newMethod, '\n');
+	cout << "method now available are: \n";
+	paymentMethods.push_back(newMethod);
+	showPaymentMehtode(paymentMethods);
+	savePayMethodLocally();
+	int chooseP;
+	cout << "Do you want to add or delete an option?  \n";
+	cout << "1) Add a new paymethod\t 2)Delete a paymethod\n (Enter 0 if the answer is no)\n";
+	cout << "Option no. :";
+	do {
+		cin >> chooseP;
+		if (chooseP == 1)
+			addPayment();
+		else if (chooseP == 2)
+			removePayment();
+		else if (chooseP == 0)
+			return;
+		else
+		{
+			cout << "Ivalid character. Please enter a number from the options above :";
+		}
+	} while (chooseP < 0 || chooseP>2);
+}
+
+void removePayment() {
+	system("cls");
+	vector<string>::iterator it = paymentMethods.begin();
+	int chooseD;
+	cout << "=== delete payment method ===\n";
+	showPaymentMehtode(paymentMethods);
+	cout << "\choose method to delete from the given list: "; cin >> chooseD;
+	it = paymentMethods.begin() + chooseD - 1;
+	paymentMethods.erase(it, it + 1);
+	cout << "\nmethods available now is : \n";
+	showPaymentMehtode(paymentMethods);
+	savePayMethodLocally();
+	int chooseP;
+	cout << "Do you want to add or delete an option?  \n";
+	cout << "1) Add a new paymethod\t 2)Delete a paymethod\n (Enter 0 if the answer is no)\n";
+	cout << "Option no. :";
+	do {
+		cin >> chooseP;
+		if (chooseP == 1)
+			addPayment();
+		else if (chooseP == 2)
+			removePayment();
+		else if (chooseP == 0)
+			return;
+		else
+		{
+			cout << "Ivalid character. Please enter a number from the options above :";
+		}
+	} while (chooseP < 0 || chooseP>2);
+	
 }
 
 void addUser()
@@ -1487,6 +1555,9 @@ void logOut()
 int main()
 {
 	loadAllDataToArr();
+	//dataForTestPurposes();
+	//saveOrderDataLocally();
+	//loadOrderDataToArr();
 	mainInterface();
 	return 0;
 	//addMedicine();
